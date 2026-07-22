@@ -1,5 +1,7 @@
 // app/admin/blog/new/page.tsx
 "use client";
+// app/admin/blog/page.tsx
+export const dynamic = "force-dynamic";
 
 import { useState } from "react";
 import { createBlogPost } from "@/app/actions/blog";
