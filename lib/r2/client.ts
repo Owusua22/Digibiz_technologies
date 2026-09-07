@@ -1,109 +1,176 @@
-// src/lib/r2/client.ts
 import {
   S3Client,
   PutObjectCommand,
   DeleteObjectCommand,
   GetObjectCommand,
+} from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { nanoid } from "nanoid";
 
-} from '@aws-sdk/client-s3';
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import { nanoid } from 'nanoid';
+function getR2Credentials() {
+  const accountId = process.env.CLOUDFLARE_R2_ACCOUNT_ID?.trim();
+  const accessKeyId = process.env.CLOUDFLARE_R2_ACCESS_KEY_ID?.trim();
+  const secretAccessKey = process.env.CLOUDFLARE_R2_SECRET_ACCESS_KEY?.trim();
+  const bucketName = process.env.CLOUDFLARE_R2_BUCKET_NAME?.trim();
+  const publicUrl = process.env.CLOUDFLARE_R2_PUBLIC_URL?.trim()?.replace(/\/+$/, "");
 
-// ✅ Validate and assign environment variables with non-null assertion
-const R2_ACCOUNT_ID = process.env.CLOUDFLARE_R2_ACCOUNT_ID!;
-const R2_ACCESS_KEY_ID = process.env.CLOUDFLARE_R2_ACCESS_KEY_ID!;
-const R2_SECRET_ACCESS_KEY = process.env.CLOUDFLARE_R2_SECRET_ACCESS_KEY!;
-const R2_BUCKET_NAME = process.env.CLOUDFLARE_R2_BUCKET_NAME!;
-const R2_PUBLIC_URL = process.env.CLOUDFLARE_R2_PUBLIC_URL!;
-
-// ✅ Runtime validation (will throw if missing)
-if (!R2_ACCOUNT_ID || !R2_ACCESS_KEY_ID || !R2_SECRET_ACCESS_KEY || !R2_BUCKET_NAME) {
-  throw new Error('❌ Missing R2 environment variables. Check your .env.local file.');
+  return {
+    accountId,
+    accessKeyId,
+    secretAccessKey,
+    bucketName,
+    publicUrl,
+  };
 }
 
-// ✅ Export the client with properly typed credentials
-export const r2Client = new S3Client({
-  region: 'auto',
-  endpoint: `https://${R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
-  credentials: {
-    accessKeyId: R2_ACCESS_KEY_ID,
-    secretAccessKey: R2_SECRET_ACCESS_KEY,
-  },
-});
+let _r2Client: S3Client | null = null;
 
-// ✅ EXPORT THESE (missing in your file)
-export const R2_BUCKET = R2_BUCKET_NAME;
-export { R2_PUBLIC_URL };
+export function getR2Client(): S3Client {
+  if (_r2Client) return _r2Client;
+
+  const { accountId, accessKeyId, secretAccessKey } = getR2Credentials();
+
+  if (!accountId || !accessKeyId || !secretAccessKey) {
+    throw new Error(
+      "Missing Cloudflare R2 credentials (CLOUDFLARE_R2_ACCOUNT_ID, CLOUDFLARE_R2_ACCESS_KEY_ID, CLOUDFLARE_R2_SECRET_ACCESS_KEY)."
+    );
+  }
+
+  _r2Client = new S3Client({
+    region: "auto",
+    endpoint: `https://${accountId}.r2.cloudflarestorage.com`,
+    credentials: {
+      accessKeyId,
+      secretAccessKey,
+    },
+  });
+
+  return _r2Client;
+}
+
+export const ALLOWED_IMAGE_TYPES = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+  "image/gif",
+  "image/svg+xml",
+  "image/avif",
+];
+
+export const MAX_IMAGE_SIZE_BYTES = 10 * 1024 * 1024; // 10MB
 
 export async function uploadToR2(
-  file: Buffer,
+  file: Buffer | Uint8Array,
   contentType: string,
-  folder: string = 'products'
+  folder: string = "blog",
+  originalFileName?: string
 ): Promise<{ url: string; key: string }> {
-  const extension = contentType.split('/')[1] ?? 'bin';
-  const key = `${folder}/${nanoid()}.${extension}`;
+  const { bucketName, publicUrl } = getR2Credentials();
 
-  await r2Client.send(
+  if (!bucketName) {
+    throw new Error("Missing CLOUDFLARE_R2_BUCKET_NAME environment variable.");
+  }
+
+  let extension = "jpg";
+  if (contentType.includes("png")) extension = "png";
+  else if (contentType.includes("webp")) extension = "webp";
+  else if (contentType.includes("gif")) extension = "gif";
+  else if (contentType.includes("svg")) extension = "svg";
+  else if (contentType.includes("avif")) extension = "avif";
+  else if (contentType.includes("jpeg") || contentType.includes("jpg")) extension = "jpg";
+  else if (originalFileName) {
+    const parts = originalFileName.split(".");
+    const ext = parts.pop()?.toLowerCase();
+    if (ext && ["jpg", "jpeg", "png", "webp", "gif", "svg", "avif"].includes(ext)) {
+      extension = ext === "jpeg" ? "jpg" : ext;
+    }
+  }
+
+  const cleanOriginalName = originalFileName
+    ? originalFileName
+        .replace(/\.[^/.]+$/, "")
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g, "-")
+        .slice(0, 30)
+    : "";
+
+  const uniqueId = nanoid(10);
+  const key = cleanOriginalName
+    ? `${folder}/${Date.now()}-${cleanOriginalName}-${uniqueId}.${extension}`
+    : `${folder}/${Date.now()}-${uniqueId}.${extension}`;
+
+  const client = getR2Client();
+
+  await client.send(
     new PutObjectCommand({
-      Bucket: R2_BUCKET_NAME,
+      Bucket: bucketName,
       Key: key,
       Body: file,
       ContentType: contentType,
     })
   );
 
-  const url = `${R2_PUBLIC_URL}/${key}`;
+  const base = publicUrl || `https://${bucketName}.r2.cloudflarestorage.com`;
+  const url = `${base}/${key}`;
   return { url, key };
 }
 
-export async function deleteFromR2(key: string): Promise<void> {
-  await r2Client.send(
-    new DeleteObjectCommand({
-      Bucket: R2_BUCKET_NAME,
-      Key: key,
-    })
-  );
+export function extractR2KeyFromUrl(urlOrKey: string): string {
+  if (!urlOrKey) return "";
+  if (!urlOrKey.startsWith("http://") && !urlOrKey.startsWith("https://")) {
+    return urlOrKey.replace(/^\/+/, "");
+  }
+
+  const { publicUrl } = getR2Credentials();
+  if (publicUrl && urlOrKey.startsWith(publicUrl)) {
+    return urlOrKey.slice(publicUrl.length).replace(/^\/+/, "");
+  }
+
+  try {
+    const parsed = new URL(urlOrKey);
+    return parsed.pathname.replace(/^\/+/, "");
+  } catch {
+    return urlOrKey;
+  }
+}
+
+export async function deleteFromR2(keyOrUrl: string): Promise<void> {
+  if (!keyOrUrl) return;
+
+  const key = extractR2KeyFromUrl(keyOrUrl);
+  // Security check: only delete objects inside 'blog/' prefix and not arbitrary paths
+  if (!key || !key.startsWith("blog/")) {
+    return;
+  }
+
+  const { bucketName } = getR2Credentials();
+  if (!bucketName) return;
+
+  try {
+    const client = getR2Client();
+    await client.send(
+      new DeleteObjectCommand({
+        Bucket: bucketName,
+        Key: key,
+      })
+    );
+  } catch (error) {
+    console.error(`Failed to delete object from R2 (key: ${key}):`, error);
+  }
 }
 
 export async function generatePresignedDownloadUrl(
   key: string,
   expiresIn: number = 3600
 ): Promise<string> {
+  const { bucketName } = getR2Credentials();
+  if (!bucketName) throw new Error("Missing R2 bucket name");
+
+  const client = getR2Client();
   const command = new GetObjectCommand({
-    Bucket: R2_BUCKET_NAME,
+    Bucket: bucketName,
     Key: key,
   });
-  return getSignedUrl(r2Client, command, { expiresIn });
-}
-
-export async function generateUploadPresignedUrl(
-  contentType: string,
-  folder: string = 'products'
-): Promise<{ uploadUrl: string; key: string; publicUrl: string }> {
-  const extension = contentType.split('/')[1] ?? 'bin';
-  const key = `${folder}/${nanoid()}.${extension}`;
-
-  const command = new PutObjectCommand({
-    Bucket: R2_BUCKET_NAME,
-    Key: key,
-    ContentType: contentType,
-  });
-
-  const uploadUrl = await getSignedUrl(r2Client, command, { expiresIn: 300 });
-  const publicUrl = `${R2_PUBLIC_URL}/${key}`;
-
-  return { uploadUrl, key, publicUrl };
-}
-
-export function extractR2KeyFromUrl(url: string): string {
-  const publicUrl = R2_PUBLIC_URL.replace(/\/+$/, '');
-  if (url.startsWith(publicUrl)) {
-    return url.slice(publicUrl.length).replace(/^\/+/, '');
-  }
-  try {
-    const parsed = new URL(url);
-    return parsed.pathname.replace(/^\/+/, '');
-  } catch {
-    return url;
-  }
+  return getSignedUrl(client, command, { expiresIn });
 }

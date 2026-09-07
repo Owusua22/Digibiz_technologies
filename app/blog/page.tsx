@@ -1,97 +1,173 @@
-import { prisma } from "@/lib/db";
-import Image from "next/image";
+import type { Metadata } from "next";
 import Link from "next/link";
-import Navbar from "@/components/Navbar";
-import { format } from "date-fns";
-import { ArrowRight, Calendar, User } from "lucide-react";
+import Image from "next/image";
+import { prisma } from "@/lib/db";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Blog - Digibiz Technologies",
+  description: "Insights on strategy, digital transformation, branding and consulting from the Digibiz team.",
+  alternates: { canonical: "/blog" },
+};
+
+function formatDateString(dateVal: Date | string) {
+  try {
+    return new Date(dateVal).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  } catch {
+    return String(dateVal);
+  }
+}
+
+function estimateReadTime(text: string) {
+  const words = text ? text.trim().split(/\s+/).length : 0;
+  const minutes = Math.max(1, Math.ceil(words / 200));
+  return `${minutes} min read`;
+}
 
 export default async function BlogPage() {
-  const posts = await prisma.post.findMany({
+  const blogPosts = await prisma.post.findMany({
     where: { published: true },
     orderBy: { createdAt: "desc" },
   });
 
+  const [featured, ...rest] = blogPosts;
+  const categories = Array.from(new Set(blogPosts.map((p) => p.category)));
+
   return (
-    <main className="bg-[#FAF9F7] min-h-screen">
-      <Navbar />
-
-      {/* Compact Header Section */}
-      <section className="bg-white border-b-2 border-black py-10">
-        <div className="max-w-6xl mx-auto px-6">
-          <span className="bg-orange-500 text-white px-3 py-1 border-2 border-black font-black uppercase text-[10px] tracking-wider shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-            Our Journal
-          </span>
-          <h1 className="text-4xl md:text-5xl font-black text-black mt-4 leading-tight">
-            DIGITAL <span className="text-orange-500 italic">INSIGHTS.</span>
-          </h1>
-          <p className="mt-3 text-base text-gray-600 font-medium max-w-lg">
-            Quick strategies and news to help you navigate the digital landscape.
-          </p>
+    <>
+      <div className="page-title" data-aos="fade">
+        <div className="container d-lg-flex justify-content-between align-items-center">
+          <h1 className="mb-2 mb-lg-0">Blog</h1>
+          <nav className="breadcrumbs">
+            <ol>
+              <li>
+                <Link href="/">Home</Link>
+              </li>
+              <li className="current">Blog</li>
+            </ol>
+          </nav>
         </div>
-      </section>
+      </div>
 
-      {/* Compact Blog Grid */}
-      <section className="py-12 px-6">
-        <div className="max-w-6xl mx-auto">
-          {posts.length === 0 ? (
-            <div className="text-center py-10 border-2 border-dashed border-black/20 font-bold text-gray-400">
-              NO POSTS PUBLISHED YET.
+      <section id="blog" className="blog section">
+        <div className="container" data-aos="fade-up" data-aos-delay="100">
+          <div className="blog-intro">
+            <p>
+              Perspectives on strategy, digital transformation, branding and business
+              growth from the people behind Digibiz Technologies.
+            </p>
+          </div>
+
+          {blogPosts.length === 0 ? (
+            <div className="text-center py-5">
+              <p className="text-gray-500">No posts have been published yet. Check back soon.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {posts.map((post) => (
-                <article key={post.id} className="group flex flex-col bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(249,115,22,1)] hover:-translate-y-1 transition-all duration-200">
-                  {/* Image Container - Reduced Aspect Ratio */}
-                  <div className="relative aspect-[16/10] border-b-2 border-black overflow-hidden bg-orange-50">
-                    <img
-                      src={post.coverImg}
-                      alt={post.title}
-                   
-                      className="object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                    <div className="absolute top-2 left-2 bg-orange-400 border-2 border-black px-2 py-0.5 text-[10px] font-black uppercase">
-                      {post.category}
+            <>
+              <div className="blog-filters" data-aos="fade-up" data-aos-delay="150">
+                <a href="#" className="active">
+                  All Posts
+                </a>
+                {categories.map((category) => (
+                  <a href={`#${category}`} key={category}>
+                    {category}
+                  </a>
+                ))}
+              </div>
+
+              {/* Featured post */}
+              {featured && (
+                <div className="mb-5" data-aos="fade-up" data-aos-delay="200">
+                  <article className="blog-featured">
+                    <div className="blog-featured-image">
+                      <Image
+                        src={featured.coverImg || "/assets/img/about/about-8.webp"}
+                        alt={featured.title}
+                        className="img-fluid"
+                        width={800}
+                        height={450}
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                        priority
+                      />
                     </div>
-                  </div>
-
-                  {/* Content Container - Compact Padding */}
-                  <div className="p-4 flex flex-col flex-grow">
-                    <div className="flex items-center gap-3 text-[10px] font-bold text-gray-500 mb-2">
-                      <span className="flex items-center gap-1">
-                        <Calendar size={12} className="text-orange-500" />
-                        {format(new Date(post.createdAt), "MMM dd, yy")}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <User size={12} className="text-orange-500" />
-                        {post.author}
-                      </span>
-                    </div>
-
-                    <h2 className="text-lg font-black text-black mb-2 leading-snug line-clamp-2 group-hover:text-orange-600 transition-colors">
-                      {post.title}
-                    </h2>
-
-                    <p className="text-gray-600 text-xs font-medium mb-4 line-clamp-2">
-                      {post.excerpt}
-                    </p>
-
-                    <div className="mt-auto">
-                      <Link
-                        href={`/blog/${post.slug}`}
-                        className="inline-flex items-center gap-2 text-xs font-black text-black group-hover:gap-3 transition-all"
-                      >
-                        READ MORE <ArrowRight size={14} className="text-orange-500" />
+                    <div className="blog-featured-body">
+                      <div className="blog-meta">
+                        <span>
+                          <i className="bi bi-folder2"></i> {featured.category}
+                        </span>
+                        <span>
+                          <i className="bi bi-calendar3"></i> {formatDateString(featured.createdAt)}
+                        </span>
+                        <span>
+                          <i className="bi bi-clock"></i> {estimateReadTime(featured.content)}
+                        </span>
+                      </div>
+                      <h2>
+                        <Link href={`/blog/${featured.slug}`}>{featured.title}</Link>
+                      </h2>
+                      <p>{featured.excerpt}</p>
+                      <Link href={`/blog/${featured.slug}`} className="read-more">
+                        <span>Read Article</span>
+                        <i className="bi bi-arrow-right"></i>
                       </Link>
                     </div>
-                  </div>
-                </article>
+                  </article>
+                </div>
+              )}
+            </>
+          )}
+
+          {/* Post grid */}
+          {rest.length > 0 && (
+            <div className="row gy-4">
+              {rest.map((post, index) => (
+                <div
+                  className="col-lg-4 col-md-6"
+                  data-aos="fade-up"
+                  data-aos-delay={200 + index * 50}
+                  key={post.slug}
+                >
+                    <article className="blog-card">
+                      <div className="blog-card-image">
+                        <span className="blog-category">{post.category}</span>
+                        <Image
+                          src={post.coverImg || "/assets/img/portfolio/portfolio-3.webp"}
+                          alt={post.title}
+                          width={400}
+                          height={250}
+                          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        />
+                      </div>
+                      <div className="blog-card-body">
+                        <div className="blog-meta">
+                          <span>
+                            <i className="bi bi-calendar3"></i> {formatDateString(post.createdAt)}
+                          </span>
+                          <span>
+                            <i className="bi bi-clock"></i> {estimateReadTime(post.content)}
+                          </span>
+                        </div>
+                        <h3>
+                          <Link href={`/blog/${post.slug}`}>{post.title}</Link>
+                        </h3>
+                        <p>{post.excerpt}</p>
+                        <Link href={`/blog/${post.slug}`} className="read-more">
+                          <span>Read Article</span>
+                          <i className="bi bi-arrow-right"></i>
+                        </Link>
+                      </div>
+                    </article>
+                </div>
               ))}
             </div>
           )}
         </div>
       </section>
-    </main>
+    </>
   );
 }

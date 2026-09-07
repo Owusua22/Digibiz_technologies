@@ -1,114 +1,216 @@
-import { prisma } from "@/lib/db";
-export const dynamic = "force-dynamic"; 
-import { notFound } from "next/navigation";
-import Navbar from "@/components/Navbar";
-import { format } from "date-fns";
-import { ArrowLeft, Calendar, User, Share2, Tag } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
+import { notFound } from "next/navigation";
+import { prisma } from "@/lib/db";
+import { requireAdminSession } from "@/lib/require-admin";
 
-interface Props {
-  params: Promise<{ slug: string }>;
+type Params = Promise<{ slug: string }>;
+
+export const dynamic = "force-dynamic";
+
+function formatDateString(dateVal: Date | string) {
+  try {
+    return new Date(dateVal).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  } catch {
+    return String(dateVal);
+  }
 }
 
-export default async function BlogPostPage({ params }: Props) {
+function estimateReadTime(text: string) {
+  const words = text ? text.trim().split(/\s+/).length : 0;
+  const minutes = Math.max(1, Math.ceil(words / 200));
+  return `${minutes} min read`;
+}
+
+export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { slug } = await params;
+  const post = await prisma.post.findUnique({
+    where: { slug },
+  });
+
+  if (!post) return {};
+
+  const coverImage = post.coverImg || "/assets/img/portfolio/portfolio-3.webp";
+
+  return {
+    title: `${post.title} - Digibiz Technologies Blog`,
+    description: post.excerpt,
+    alternates: { canonical: `/blog/${post.slug}` },
+    openGraph: {
+      title: post.title,
+      description: post.excerpt,
+      url: `/blog/${post.slug}`,
+      type: "article",
+      images: [coverImage],
+    },
+  };
+}
+
+export default async function BlogPostPage({ params }: { params: Params }) {
+  const { slug } = await params;
+  const session = await requireAdminSession();
 
   const post = await prisma.post.findUnique({
     where: { slug },
   });
 
-  if (!post) notFound();
+  // If post does not exist, or is draft and user is not admin, return 404
+  if (!post || (!post.published && !session)) {
+    notFound();
+  }
+
+  const related = await prisma.post.findMany({
+    where: {
+      published: true,
+      slug: { not: post.slug },
+    },
+    take: 3,
+    orderBy: { createdAt: "desc" },
+  });
+
+  // Parse paragraphs safely
+  const paragraphs = post.content
+    ? post.content
+        .split(/\r?\n\s*\r?\n/)
+        .map((p) => p.trim())
+        .filter(Boolean)
+    : [];
+
+  const coverImage = post.coverImg || "/assets/img/portfolio/portfolio-3.webp";
+  const authorName = post.author || "Admin";
 
   return (
-    <main className="bg-[#FAF9F7] min-h-screen pb-16">
-      <Navbar />
+    <>
+      <div className="page-title" data-aos="fade">
+        <div className="container d-lg-flex justify-content-between align-items-center">
+          <h1 className="mb-2 mb-lg-0">Blog Post</h1>
+          <nav className="breadcrumbs">
+            <ol>
+              <li>
+                <Link href="/">Home</Link>
+              </li>
+              <li>
+                <Link href="/blog">Blog</Link>
+              </li>
+              <li className="current">{post.title}</li>
+            </ol>
+          </nav>
+        </div>
+      </div>
 
-      <article>
-        {/* Header: Title and Meta */}
-        <header className="bg-white border-b-2 border-black pt-12 pb-8">
-          <div className="max-w-3xl mx-auto px-6">
-            <Link 
-              href="/blog" 
-              className="inline-flex items-center gap-1 text-[10px] font-black text-gray-400 hover:text-orange-500 transition-colors mb-6 uppercase tracking-widest"
-            >
-              <ArrowLeft size={12} /> Back to Journal
-            </Link>
-            
-            <div className="flex items-center gap-2 mb-4">
-              <span className="bg-orange-100 text-orange-700 px-2 py-0.5 border-2 border-orange-700 font-black uppercase text-[10px]">
-                {post.category}
-              </span>
+      <section id="blog-post" className="blog-post section">
+        <div className="container" data-aos="fade-up" data-aos-delay="100">
+          <Link href="/blog" className="blog-back-link">
+            <i className="bi bi-arrow-left"></i>
+            <span>Back to Blog</span>
+          </Link>
+
+          {!post.published && (
+            <div className="mb-4 rounded-md border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800">
+              <strong>Draft Preview:</strong> This post is currently unpublished and only visible to administrators.
             </div>
+          )}
 
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-black text-black leading-tight mb-6">
-              {post.title}
-            </h1>
-
-            <div className="flex flex-wrap items-center gap-5 text-[11px] font-bold text-gray-500 border-t-2 border-black/5 pt-6">
-              <span className="flex items-center gap-1.5">
-                <User size={14} className="text-orange-500" /> {post.author}
+          <div className="blog-post-header">
+            <span className="blog-category">{post.category}</span>
+            <h1>{post.title}</h1>
+            <div className="blog-meta justify-content-center">
+              <span>
+                <i className="bi bi-person"></i> {authorName}
               </span>
-              <span className="flex items-center gap-1.5">
-                <Calendar size={14} className="text-orange-500" /> {format(new Date(post.createdAt), "MMMM dd, yyyy")}
+              <span>
+                <i className="bi bi-calendar3"></i> {formatDateString(post.createdAt)}
               </span>
-              <button className="ml-auto flex items-center gap-1.5 hover:text-orange-500 transition-colors">
-                <Share2 size={14} /> SHARE
-              </button>
+              <span>
+                <i className="bi bi-clock"></i> {estimateReadTime(post.content)}
+              </span>
             </div>
           </div>
-        </header>
 
-        {/* Featured Image */}
-        <div className="max-w-4xl mx-auto px-6 -mt-6">
-          <div className="relative aspect-video border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] overflow-hidden bg-white">
-            <img
-              src={post.coverImg}
+          <div className="blog-post-cover" data-aos="zoom-in" data-aos-delay="150">
+            <Image
+              src={coverImage}
               alt={post.title}
-           
-              className="object-cover"
-          
+              className="img-fluid"
+              width={1200}
+              height={630}
+              sizes="(max-width: 768px) 100vw, 1200px"
+              priority
             />
           </div>
-        </div>
 
-        {/* Body Content */}
-        <div className="max-w-3xl mx-auto px-6 mt-12">
-          <div className="bg-white border-2 border-black p-6 md:p-10 shadow-[4px_4px_0px_0px_rgba(249,115,22,1)]">
-            <div className="prose prose-sm md:prose-base max-w-none font-medium leading-relaxed text-gray-800 whitespace-pre-wrap">
-              {post.content}
-            </div>
+          <div className="blog-post-body" data-aos="fade-up" data-aos-delay="200">
+            {paragraphs.length > 0 ? (
+              paragraphs.map((paragraph, index) => (
+                <p key={index}>{paragraph}</p>
+              ))
+            ) : (
+              <p>{post.content}</p>
+            )}
 
-            {/* Post Tags/Footer */}
-            <div className="mt-10 pt-6 border-t-2 border-black/5 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Tag size={14} className="text-orange-500" />
-                <span className="text-[10px] font-black uppercase text-gray-400">Digital Strategy</span>
-              </div>
-              
-              <div className="flex gap-2">
-                <div className="w-6 h-6 rounded-full bg-black"></div>
-                <div className="w-6 h-6 rounded-full bg-orange-500"></div>
-              </div>
-            </div>
-          </div>
-
-          {/* Compact Newsletter/CTA */}
-          <div className="mt-8 bg-black text-white p-6 border-2 border-black shadow-[4px_4px_0px_0px_rgba(249,115,22,1)]">
-            <h3 className="text-lg font-black mb-1 italic">STAY UPDATED</h3>
-            <p className="text-xs text-gray-400 mb-4 font-bold">Get our latest digital insights sent directly to your inbox.</p>
-            <div className="flex flex-col sm:flex-row gap-2">
-              <input 
-                type="email" 
-                placeholder="you@example.com" 
-                className="bg-[#1A1A1A] border-2 border-white/10 p-2 text-xs font-bold outline-none focus:border-orange-500 flex-grow"
+            <div className="blog-author-box">
+              <Image
+                src="/assets/img/person/person-f-1.webp"
+                alt={authorName}
+                width={60}
+                height={60}
+                className="rounded-circle"
               />
-              <button className="bg-orange-500 text-black px-4 py-2 text-xs font-black uppercase hover:bg-white transition-colors">
-                Subscribe
-              </button>
+              <div>
+                <h5>{authorName}</h5>
+                <span>Digibiz Technologies</span>
+              </div>
             </div>
           </div>
+
+          {related.length > 0 && (
+            <div className="blog-related mt-5 pt-5" data-aos="fade-up" data-aos-delay="250">
+              <h4>You Might Also Like</h4>
+              <div className="row gy-4">
+                {related.map((relatedPost) => (
+                  <div className="col-lg-4 col-md-6" key={relatedPost.slug}>
+                    <article className="blog-card">
+                      <div className="blog-card-image">
+                        <span className="blog-category">{relatedPost.category}</span>
+                        <Image
+                          src={relatedPost.coverImg || "/assets/img/portfolio/portfolio-3.webp"}
+                          alt={relatedPost.title}
+                          width={400}
+                          height={250}
+                          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        />
+                      </div>
+                      <div className="blog-card-body">
+                        <div className="blog-meta">
+                          <span>
+                            <i className="bi bi-calendar3"></i> {formatDateString(relatedPost.createdAt)}
+                          </span>
+                          <span>
+                            <i className="bi bi-clock"></i> {estimateReadTime(relatedPost.content)}
+                          </span>
+                        </div>
+                        <h3>
+                          <Link href={`/blog/${relatedPost.slug}`}>{relatedPost.title}</Link>
+                        </h3>
+                        <p>{relatedPost.excerpt}</p>
+                        <Link href={`/blog/${relatedPost.slug}`} className="read-more">
+                          <span>Read Article</span>
+                          <i className="bi bi-arrow-right"></i>
+                        </Link>
+                      </div>
+                    </article>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
-      </article>
-    </main>
+      </section>
+    </>
   );
 }

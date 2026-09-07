@@ -1,0 +1,110 @@
+[
+  {
+    "slug": "building-a-growth-focused-strategy",
+    "title": "Building a Growth-Focused Strategy for 2026",
+    "excerpt": "A resilient growth strategy blends clear priorities with the flexibility to adapt. Here's the framework we use with clients before any budget is set.",
+    "category": "Strategy",
+    "author": "Jessica Martinez",
+    "authorRole": "UX Designer",
+    "authorImage": "/assets/img/person/person-f-12.webp",
+    "date": "2026-01-14",
+    "readTime": "6 min read",
+    "coverImage": "/assets/img/about/about-8.webp",
+    "content": [
+      "Every business we work with wants growth, but very few teams agree on what growth actually means for them. Before setting a single target, we ask clients to define growth in three dimensions: revenue, capability, and resilience. A strategy that only optimizes for revenue tends to break the moment market conditions shift.",
+      "The first step in our process is a capability audit. We look honestly at what the organization does better than anyone else, and just as importantly, what it merely does adequately. Resources should follow the first list, not the second.",
+      "From there we build a prioritized roadmap rather than a wish list. Every initiative competes for the same finite time and budget, so we force-rank opportunities against expected impact and time-to-value. This alone eliminates most of the noise in a typical annual plan.",
+      "Finally, we build in quarterly checkpoints where the strategy itself can be challenged, not just the execution against it. Markets move faster than annual planning cycles, and a strategy that can't be revisited quickly becomes a liability instead of an asset."
+    ]
+  },
+  {
+    "slug": "digital-transformation-without-the-disruption",
+    "title": "Digital Transformation Without the Disruption",
+    "excerpt": "Most transformation projects fail not because of the technology, but because of how change is introduced to the people who have to use it every day.",
+    "category": "Digital",
+    "author": "David Rodriguez",
+    "authorRole": "Software Engineer",
+    "authorImage": "/assets/img/person/person-m-8.webp",
+    "date": "2026-02-02",
+    "readTime": "5 min read",
+    "coverImage": "/assets/img/services/services-1.webp",
+    "content": [
+      "Digital transformation has a branding problem. It's often pitched internally as a technology rollout, when in practice it's a change-management exercise with software attached. Teams that treat it that way see far higher adoption rates.",
+      "We start every engagement by mapping the actual workflow people use today, warts and all. Shadow processes and spreadsheet workarounds are usually the clearest signal of where a new system needs to earn trust before it can replace anything.",
+      "Rolling out changes in thin, reversible slices beats a single big-bang launch almost every time. It gives the organization room to catch problems early and gives employees confidence that their feedback actually shapes the outcome.",
+      "The projects that stick are the ones where leadership keeps using the old system publicly failing while championing the new one succeeding — not the ones with the flashiest kickoff deck."
+    ]
+  },
+  {
+    "slug": "what-clients-actually-mean-by-branding",
+    "title": "What Clients Actually Mean by 'Branding'",
+    "excerpt": "When a client asks for a brand refresh, they're rarely just asking for a new logo. Here's how we translate that request into a real creative brief.",
+    "category": "Branding",
+    "author": "Amanda Wilson",
+    "authorRole": "Creative Director",
+    "authorImage": "/assets/img/person/person-f-6.webp",
+    "date": "2026-02-19",
+    "readTime": "4 min read",
+    "coverImage": "/assets/img/portfolio/portfolio-3.webp",
+    "content": [
+      "\"We need a new logo\" is almost never the real brief. Underneath it is usually a mix of frustrations: the business has outgrown its original positioning, internal teams describe the company differently depending on who you ask, or a competitor's rebrand made the current identity feel dated.",
+      "Our first move is to interview stakeholders separately and compare answers. The gap between how the CEO describes the company and how sales describes it to prospects is often the most useful data point in the entire project.",
+      "A visual identity should be the last thing we design, not the first. Positioning, tone of voice, and a clear articulation of who the brand is not for all come before a single color palette is chosen.",
+      "When it works, a rebrand doesn't just look different — it gives every team a shared, defensible answer to 'why us' that shows up consistently from the sales deck to the careers page."
+    ]
+  },
+  {
+    "slug": "reading-a-balance-sheet-like-an-operator",
+    "title": "Reading a Balance Sheet Like an Operator, Not an Accountant",
+    "excerpt": "You don't need a finance degree to make sharper decisions from your financial statements. You need to know which three numbers actually move the business.",
+    "category": "Consulting",
+    "author": "Ryan Thompson",
+    "authorRole": "Business Analyst",
+    "authorImage": "/assets/img/person/person-m-12.webp",
+    "date": "2026-03-05",
+    "readTime": "7 min read",
+    "coverImage": "/assets/img/portfolio/portfolio-7.webp",
+    "content": [
+      "Most operators skim the income statement and ignore the balance sheet entirely, which is a mistake, because the balance sheet tells you how much cash flexibility the business actually has to survive a bad quarter.",
+      "Working capital is the number we watch most closely with clients. A profitable company with poor working capital discipline can still run out of cash, and a break-even company with tight working capital can comfortably ride out a downturn.",
+      "Debt-to-equity matters less on its own than what the debt is funding. Debt used to buy time for a proven growth engine is very different from debt used to paper over a broken one.",
+      "The goal isn't to turn every operator into an accountant. It's to give leadership teams three or four numbers they can check monthly without needing to wait for a formal board deck to know whether the business is getting healthier or not."
+    ]
+  },
+  {
+    "slug": "the-consulting-questions-we-ask-in-week-one",
+    "title": "The Consulting Questions We Ask in Week One",
+    "excerpt": "Before we recommend a single change, we spend the first week asking questions most internal teams stopped asking a long time ago.",
+    "category": "Consulting",
+    "author": "Rachel Chen",
+    "authorRole": "Project Manager",
+    "authorImage": "/assets/img/person/person-f-10.webp",
+    "date": "2026-03-21",
+    "readTime": "5 min read",
+    "coverImage": "/assets/img/portfolio/portfolio-9.webp",
+    "content": [
+      "New engagements start with a simple but uncomfortable question: what would we lose if this process disappeared tomorrow? The honest answer, more often than expected, is 'not much' — a sign the process is legacy overhead rather than a real driver of value.",
+      "We also ask who owns a decision versus who is simply consulted on it. Blurry decision rights are behind a surprising share of the delays clients bring to us in the first place.",
+      "Another favorite: which metric does this team optimize for when nobody is watching? The gap between the stated goal and the actual behavior it produces usually points straight to the root cause.",
+      "None of these questions require outside expertise to ask internally. What an outside team adds is permission — people tend to answer more honestly when the person asking doesn't sit in the next department over."
+    ]
+  },
+  {
+    "slug": "designing-onboarding-that-people-actually-finish",
+    "title": "Designing Onboarding That People Actually Finish",
+    "excerpt": "A polished first screen means nothing if half of your new users never reach the moment your product actually becomes useful to them.",
+    "category": "Design",
+    "author": "Sarah Nkansah",
+    "authorRole": "Product Designer",
+    "authorImage": "/assets/img/person/person-f-7.webp",
+    "date": "2026-04-08",
+    "readTime": "6 min read",
+    "coverImage": "/assets/img/portfolio/portfolio-portrait-8.webp",
+    "content": [
+      "The biggest onboarding mistake we see is treating it as a tour of features instead of a path to one specific outcome. Users don't want to learn your product; they want to finish the task that brought them there in the first place.",
+      "We map onboarding backwards from that first meaningful outcome — the moment a user would say 'okay, this actually works for me' — and cut every step that doesn't lead directly to it.",
+      "Progressive disclosure beats a long setup wizard almost every time. Ask for the minimum needed to reach value, and introduce advanced configuration only once someone has a reason to care about it.",
+      "Finally, instrument the drop-off points, not just the completion rate. Knowing exactly which screen loses people tells you far more than an average completion percentage ever will."
+    ]
+  }
+]

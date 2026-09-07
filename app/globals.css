@@ -1,1 +1,43 @@
-@import "tailwindcss";
+/* Tailwind CSS v4 — preflight (base reset) intentionally excluded.
+   The original CoreBiz template ships its own Bootstrap + main.css reset,
+   and Tailwind's preflight would alter default margins/typography and
+   break the pixel-exact look of the converted template pages.
+   Tailwind's utility classes (used for the new Blog pages) still work. */
+@import "tailwindcss/theme.css";
+@import "tailwindcss/utilities.css";
+
+@theme {
+  --color-corebiz-accent: #09947d;
+  --color-corebiz-heading: #172624;
+  --color-corebiz-text: #444444;
+  --color-corebiz-surface: #ffffff;
+  --font-corebiz-heading: "Plus Jakarta Sans", sans-serif;
+  --font-corebiz-body: "Plus Jakarta Sans", sans-serif;
+}
+
+/* Global font uniformity — Plus Jakarta Sans across entire site */
+body {
+  font-family: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Plus Jakarta Sans", sans-serif !important;
+}
+
+/* Admin dashboard: reuses the root layout (so it stays inside the app's
+   font/preconnect/script setup) but hides the marketing chrome and gets
+   its own plain, light background instead of the template's styling. */
+body.admin-page #header,
+body.admin-page footer.footer,
+body.admin-page #preloader,
+body.admin-page #scroll-top {
+  display: none !important;
+}
+
+body.admin-page {
+  background: #f4f6f8;
+}
+
+body.admin-page main.main {
+  margin: 0;
+}

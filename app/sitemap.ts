@@ -1,5 +1,6 @@
 import { MetadataRoute } from "next";
 import { prisma } from "@/lib/db";
+import { SERVICE_SLUGS } from "@/data/services";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://digibiztechnologies.com";
@@ -21,6 +22,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: post.updatedAt || post.createdAt,
     changeFrequency: "weekly" as const,
     priority: 0.7,
+  }));
+
+  const serviceUrls = SERVICE_SLUGS.map((slug) => ({
+    url: `${baseUrl}/services/${slug}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.8,
   }));
 
   return [
@@ -54,6 +62,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "monthly",
       priority: 0.8,
     },
+
+    // Service detail pages
+    ...serviceUrls,
 
     // Dynamic blog pages
     ...blogUrls,

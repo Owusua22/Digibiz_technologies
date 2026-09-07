@@ -1,166 +1,177 @@
-"use client";
-
 import Link from "next/link";
-import { motion } from "framer-motion";
+import Image from "next/image";
 
 export default function Footer() {
+  const quickLinks = [
+    { label: "Home", href: "/" },
+    { label: "About Us", href: "/about" },
+    { label: "Services", href: "/services" },
+    { label: "Pricing", href: "/pricing" },
+    { label: "Portfolio", href: "/portfolio" },
+    { label: "Blog", href: "/blog" },
+    { label: "Contact", href: "/contact" },
+  ];
+
+  const services = [
+    { label: "Website & Web Development", href: "/services/website-development" },
+    { label: "Digital Marketing & SEO", href: "/services/digital-marketing-seo" },
+    { label: "Business Automation", href: "/services/business-automation" },
+    { label: "AI Solutions", href: "/services/ai-solutions" },
+    { label: "Branding & Graphic Design", href: "/services/branding-graphic-design" },
+    { label: "Business & Digital Strategy", href: "/services/business-digital-strategy" },
+  ];
+
+  const socials = [
+    { icon: "bi-twitter-x", href: "https://twitter.com/digibiztech", label: "Twitter / X" },
+    { icon: "bi-facebook", href: "https://facebook.com/digibiztechnologies", label: "Facebook" },
+    { icon: "bi-instagram", href: "https://instagram.com/digibiztechnologies", label: "Instagram" },
+    { icon: "bi-linkedin", href: "https://linkedin.com/company/digibiz-technologies", label: "LinkedIn" },
+  ];
+
+  const css = `
+    .dg-footer { background:#0e1b1a; color:#c7d1d0; font-size:0.9rem; }
+
+    .dg-footer-main { max-width:1140px; margin:0 auto; padding:48px 20px 32px; }
+    .dg-grid { display:grid; grid-template-columns:1.6fr 1fr 1.4fr 1.2fr; gap:32px; }
+
+    .dg-col h4 { color:#fff; font-size:1rem; font-weight:600; margin:0 0 18px; position:relative; padding-bottom:10px; }
+    .dg-col h4::after { content:""; position:absolute; left:0; bottom:0; width:34px; height:2px; background:#08947d; border-radius:2px; }
+
+    .dg-desc { color:#9fb0ae; line-height:1.65; font-size:0.88rem; margin:12px 0 18px; }
+    .dg-logo { display:inline-flex; margin-bottom:6px; }
+
+    .dg-contact { list-style:none; padding:0; margin:0; }
+    .dg-contact li { display:flex; align-items:center; gap:10px; margin-bottom:10px; font-size:0.88rem; }
+    .dg-contact i { color:#08947d; font-size:1rem; flex-shrink:0; }
+    .dg-contact a { color:#c7d1d0; text-decoration:none; transition:color .2s ease; word-break:break-word; }
+    .dg-contact a:hover { color:#08947d; }
+
+    .dg-links ul { list-style:none; padding:0; margin:0; }
+    .dg-links li { margin-bottom:11px; }
+    .dg-links a { color:#9fb0ae; text-decoration:none; font-size:0.88rem; transition:color .2s ease, padding-left .2s ease; position:relative; }
+    .dg-links a::before { content:"\\203A"; margin-right:8px; color:#08947d; font-weight:700; }
+    .dg-links a:hover { color:#fff; padding-left:4px; }
+
+    .dg-socials { display:flex; gap:10px; }
+    .dg-socials a { width:38px; height:38px; display:flex; align-items:center; justify-content:center; border-radius:50%; background:rgba(255,255,255,0.08); color:#c7d1d0; font-size:1rem; transition:all .25s ease; }
+    .dg-socials a:hover { background:#08947d; color:#fff; transform:translateY(-3px); }
+
+    .dg-bottom { border-top:1px solid rgba(255,255,255,0.08); padding:18px 20px; }
+    .dg-bottom-inner { max-width:1140px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+    .dg-bottom p { margin:0; font-size:0.83rem; color:#9fb0ae; }
+    .dg-bottom strong { color:#fff; }
+    .dg-legal { display:flex; align-items:center; gap:12px; }
+    .dg-legal a { color:#9fb0ae; text-decoration:none; font-size:0.83rem; transition:color .2s ease; }
+    .dg-legal a:hover { color:#08947d; }
+    .dg-legal span { color:#445; }
+
+    @media (max-width:991px) {
+      .dg-grid { grid-template-columns:1fr 1fr; gap:28px 24px; }
+      .dg-about { grid-column:1 / -1; }
+    }
+    @media (max-width:600px) {
+      .dg-grid { grid-template-columns:1fr; gap:30px; }
+      .dg-footer-main { padding:36px 20px 24px; }
+      .dg-bottom-inner { flex-direction:column; text-align:center; }
+    }
+  `;
+
   return (
-    <footer className="relative pt-16 md:pt-20 bg-white w-full overflow-hidden">
-      {/* Newsletter (overlapping) */}
-      <div className="relative z-20 max-w-5xl mx-auto px-4 sm:px-6 w-full">
-        <motion.div
-          initial={{ opacity: 0, y: 18 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="bg-orange-400 border-2 border-black p-6 sm:p-8 md:p-10 shadow-[8px_8px_0px_0px_#0a0a0a] flex flex-col md:flex-row gap-6 md:items-center md:justify-between"
-        >
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-black leading-tight whitespace-nowrap text-center md:text-left">
-            Subscribe newsletter!
-          </h2>
+    <footer id="footer" className="dg-footer">
+      <style dangerouslySetInnerHTML={{ __html: css }} />
 
-          <form className="w-full flex flex-col sm:flex-row items-stretch sm:items-center gap-4 border-b-2 border-black/25 pb-3 sm:pb-2">
-            <input
-              type="email"
-              placeholder="your email address"
-              className="w-full bg-transparent text-black placeholder-black/60 font-semibold text-sm sm:text-base outline-none"
-              required
-            />
-            <button
-              type="submit"
-              className="bg-orange-500 text-black font-bold text-sm sm:text-base whitespace-nowrap px-4 py-2 rounded-none hover:bg-orange-600 transition-colors border-0"
-            >
-              Submit Now
-            </button>
-          </form>
-        </motion.div>
-      </div>
-
-      {/* Dark footer area with angled top */}
-      <div
-        className="relative bg-[#0a0a0a] w-full -mt-10 sm:-mt-14 md:-mt-20 pt-28 sm:pt-32 md:pt-40 pb-14 md:pb-16 px-4 sm:px-6"
-        style={{
-          clipPath: "polygon(0 9vw, 100% 0, 100% 100%, 0 100%)",
-        }}
-      >
-        {/* Decorative dot grid (hide on very small) */}
-        <div
-          className="absolute top-10 left-6 w-16 h-16 opacity-20 z-0 hidden lg:block"
-          style={{
-            backgroundImage: "radial-gradient(#ffffff 2px, transparent 2px)",
-            backgroundSize: "16px 16px",
-          }}
-        />
-
-        <div className="relative z-10 max-w-7xl mx-auto">
-          {/* Responsive columns */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 md:gap-12">
-            {/* Brand / Social / Copyright */}
-            <div className="lg:col-span-4 md:col-span-1 flex flex-col">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="h-10 w-10 md:h-12 md:w-12 rounded-full bg-orange-500 flex items-center justify-center text-white font-bold text-xl">
-                  D
-                </div>
-                <div>
-                  <h2 className="text-xl md:text-2xl font-bold text-white leading-tight">
-                    DigiBiz
-                  </h2>
-                  <p className="text-[9px] md:text-[10px] text-gray-400 uppercase tracking-widest font-semibold">
-                    Consulting Service
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex gap-3 text-white font-bold text-base md:text-lg mb-4 flex-wrap">
-                <Link href="#" className="hover:text-orange-500 transition-colors">
-                  FB
-                </Link>
-                <span className="text-gray-600">/</span>
-                <Link href="#" className="hover:text-orange-500 transition-colors">
-                  Tw
-                </Link>
-                <span className="text-gray-600">/</span>
-                <Link href="#" className="hover:text-orange-500 transition-colors">
-                  Li
-                </Link>
-              </div>
-
-              <p className="text-gray-500 text-sm font-medium mt-auto">
-                Copyright © {new Date().getFullYear()} DigiBiz.net
-              </p>
-            </div>
-
-            {/* Company */}
-            <div className="lg:col-span-3 md:col-span-1">
-              <h4 className="text-white font-bold text-lg mb-5">Company</h4>
-              <ul className="flex flex-col gap-3 text-gray-400 text-sm md:text-base font-medium">
-                {[
-                  "About",
-                  "Terms of Use",
-                  "Privacy Policy",
-                  "How it Works",
-                  "Contact Us",
-                ].map((t) => (
-                  <li key={t}>
-                    <Link
-                      href="#"
-                      className="hover:text-orange-500 transition-colors"
-                    >
-                      {t}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Support */}
-            <div className="lg:col-span-3 md:col-span-1">
-              <h4 className="text-white font-bold text-lg mb-5">Support</h4>
-              <ul className="flex flex-col gap-3 text-gray-400 text-sm md:text-base font-medium">
-                {["Support Center", "24h Service", "Quick Chat"].map((t) => (
-                  <li key={t}>
-                    <Link
-                      href="#"
-                      className="hover:text-orange-500 transition-colors"
-                    >
-                      {t}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Contact */}
-            <div className="lg:col-span-2 md:col-span-1">
-              <h4 className="text-white font-bold text-lg mb-5">Contact</h4>
-              <ul className="flex flex-col gap-3 text-gray-400 text-sm md:text-base font-medium">
-                {["WhatsApp", "Support 24"].map((t) => (
-                  <li key={t}>
-                    <Link
-                      href="#"
-                      className="hover:text-orange-500 transition-colors"
-                    >
-                      {t}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
+      {/* Main Footer */}
+      <div className="dg-footer-main">
+        <div className="dg-grid">
+          {/* About */}
+          <div className="dg-col dg-about">
+            <Link href="/" className="dg-logo" aria-label="Digibiz Technologies — Go to homepage">
+              <Image
+                src="/Digibiz_logo.png"
+                alt="Digibiz Technologies"
+                width={150}
+                height={44}
+                style={{ height: "40px", width: "auto" }}
+              />
+            </Link>
+            <p className="dg-desc">
+              We partner with growing businesses to deliver high-performance websites,
+              ROI-focused marketing, automation, and practical AI solutions.
+            </p>
+            <ul className="dg-contact">
+              <li>
+                <i className="bi bi-geo-alt"></i>
+                <span>Accra, Ghana</span>
+              </li>
+              <li>
+                <i className="bi bi-telephone"></i>
+                <a href="tel:+233553191734">+233 553 191 734</a>
+              </li>
+              <li>
+                <i className="bi bi-envelope"></i>
+                <a href="mailto:digibiztechnologies1@gmail.com">digibiztechnologies1@gmail.com</a>
+              </li>
+            </ul>
           </div>
 
-          {/* Optional extra bottom divider on mobile */}
-          <div className="mt-10 md:hidden border-t border-white/10" />
-        </div>
+          {/* Quick Links */}
+          <div className="dg-col dg-links">
+            <h4>Quick Links</h4>
+            <ul>
+              {quickLinks.map((l) => (
+                <li key={l.href}>
+                  <Link href={l.href}>{l.label}</Link>
+                </li>
+              ))}
+            </ul>
+          </div>
 
-        {/* Decorative squiggle (hide on mobile) */}
-        <div className="hidden md:block absolute bottom-6 right-6 opacity-15 pointer-events-none">
-          <svg width="80" height="80" viewBox="0 0 100 100" fill="none">
-            <path
-              d="M10 80C30 90 60 100 80 80C100 60 90 20 60 10C30 0 10 30 20 50C30 70 60 80 90 70"
-              stroke="white"
-              strokeWidth="2"
-              strokeLinecap="round"
-            />
-          </svg>
+          {/* Services */}
+          <div className="dg-col dg-links">
+            <h4>Our Services</h4>
+            <ul>
+              {services.map((l) => (
+                <li key={l.href}>
+                  <Link href={l.href}>{l.label}</Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Connect */}
+          <div className="dg-col dg-connect">
+            <h4>Connect With Us</h4>
+            <p className="dg-desc">
+              Follow us on social media or reach out directly to discuss your next project.
+            </p>
+            <div className="dg-socials">
+              {socials.map((s) => (
+                <a
+                  key={s.icon}
+                  href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={s.label}
+                >
+                  <i className={`bi ${s.icon}`}></i>
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom Bar */}
+      <div className="dg-bottom">
+        <div className="dg-bottom-inner">
+          <p>
+            © <span>Copyright</span> <strong>Digibiz Technologies</strong>. All Rights Reserved.
+          </p>
+          <div className="dg-legal">
+            <Link href="/privacy">Privacy Policy</Link>
+            <span>•</span>
+            <Link href="/terms">Terms of Service</Link>
+          </div>
         </div>
       </div>
     </footer>
