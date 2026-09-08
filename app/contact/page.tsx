@@ -29,8 +29,8 @@ const SERVICES = [
 
 const SOCIAL_LINKS = [
   { href: "https://twitter.com/digibiztech", icon: "bi-twitter-x", label: "Twitter / X" },
-  { href: "https://facebook.com/digibiztechnologies", icon: "bi-facebook", label: "Facebook" },
-  { href: "https://instagram.com/digibiztechnologies", icon: "bi-instagram", label: "Instagram" },
+  { href: "https://web.facebook.com/people/Digibiz-Technologies/61558494960962/", icon: "bi-facebook", label: "Facebook" },
+  { href: "https://www.instagram.com/digibiz_technologies?stkn=aWJvemd3MTMxeGNj", icon: "bi-instagram", label: "Instagram" },
   { href: "https://linkedin.com/company/digibiz-technologies", icon: "bi-linkedin", label: "LinkedIn" },
 ];
 

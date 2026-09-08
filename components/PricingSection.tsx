@@ -23,7 +23,6 @@ export default function PricingSection({
   showAddons?: boolean;
   showFaqs?: boolean;
 }) {
-  const [currency, setCurrency] = useState<"GHS" | "USD">("GHS");
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
   const toggleFaq = (idx: number) => {
@@ -90,39 +89,13 @@ export default function PricingSection({
           color: ${ACCENT};
         }
 
-        /* Currency Toggle */
-        .currency-toggle-wrap {
-          display: inline-flex;
-          align-items: center;
-          background: #f1f5f4;
-          padding: 4px;
-          border-radius: 999px;
-          border: 1px solid rgba(8, 148, 125, 0.2);
-          margin-bottom: 36px;
-        }
-        .currency-btn {
-          padding: 6px 18px;
-          border-radius: 999px;
-          font-size: 0.86rem;
-          font-weight: 700;
-          border: none;
-          background: transparent;
-          color: #555;
-          cursor: pointer;
-          transition: all 0.2s ease;
-        }
-        .currency-btn.active {
-          background: ${ACCENT};
-          color: #fff;
-          box-shadow: 0 2px 8px rgba(8, 148, 125, 0.3);
-        }
-
         /* Pricing Grid */
         .pricing-grid {
           display: grid;
           grid-template-columns: repeat(4, 1fr);
           gap: 24px;
           align-items: stretch;
+          margin-top: 24px;
         }
 
         @media (max-width: 1199px) {
@@ -506,40 +479,22 @@ export default function PricingSection({
         }
       `}</style>
 
-      {/* Optional Top Section Heading */}
+      {/* Top Section Heading */}
       {showHeading && (
-        <div className="text-center mb-4" data-aos="fade-up">
+        <div className="text-center mb-5" data-aos="fade-up">
           <span className="dt-eyebrow">Transparent Pricing</span>
           <h2 style={{ fontWeight: 800, fontSize: "clamp(1.9rem, 3.5vw, 2.6rem)", marginBottom: 12 }}>
             Simple, Value-Driven Investment Packages
           </h2>
-          <p style={{ color: "#555", maxWidth: 620, margin: "0 auto 24px", fontSize: "1.02rem" }}>
+          <p style={{ color: "#555", maxWidth: 620, margin: "0 auto", fontSize: "1.02rem" }}>
             No hidden retainers, no mystery invoices. Choose a transparent digital package or request a custom scope tailored to your business goals.
           </p>
-
-          <div className="currency-toggle-wrap">
-            <button
-              type="button"
-              className={`currency-btn ${currency === "GHS" ? "active" : ""}`}
-              onClick={() => setCurrency("GHS")}
-            >
-              Ghanaian Cedi (GH₵)
-            </button>
-            <button
-              type="button"
-              className={`currency-btn ${currency === "USD" ? "active" : ""}`}
-              onClick={() => setCurrency("USD")}
-            >
-              USD ($)
-            </button>
-          </div>
         </div>
       )}
 
-      {/* Main 4 Pricing Cards */}
+      {/* Main Pricing Cards */}
       <div className="pricing-grid">
         {PRICING_TIERS.map((tier, idx) => {
-          const priceValue = currency === "GHS" ? tier.priceGHS : tier.priceUSD;
           return (
             <div
               key={tier.id}
@@ -567,7 +522,7 @@ export default function PricingSection({
               </div>
 
               <div className="price-display-wrap">
-                <span className="price-amount">{priceValue}</span>
+                <span className="price-amount">{tier.priceGHS}</span>
                 {tier.period && <span className="price-period">/ {tier.period}</span>}
               </div>
 

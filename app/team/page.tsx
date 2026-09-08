@@ -54,9 +54,9 @@ export default function TeamPage() {
                 <p className="member-bio">Praesentium nihil ut laudantium cumque. Ut et consequatur ab ut totam architecto. Expedita sunt eum</p>
                 <div className="member-socials">
                   <a href="#"><i className="bi bi-twitter-x"></i></a>
-                  <a href="#"><i className="bi bi-facebook"></i></a>
+                  <a href="https://web.facebook.com/people/Digibiz-Technologies/61558494960962/" target="_blank" rel="noopener noreferrer"><i className="bi bi-facebook"></i></a>
                   <a href="#"><i className="bi bi-linkedin"></i></a>
-                  <a href="#"><i className="bi bi-instagram"></i></a>
+                  <a href="https://www.instagram.com/digibiz_technologies?stkn=aWJvemd3MTMxeGNj" target="_blank" rel="noopener noreferrer"><i className="bi bi-instagram"></i></a>
                 </div>
               </div>
             </div>
@@ -73,7 +73,7 @@ export default function TeamPage() {
                 <p className="member-bio">Voluptas qui enim omnis est atque. Enim sunt quo et amet corporis et. Autem eaque optio.</p>
                 <div className="member-socials">
                   <a href="#"><i className="bi bi-twitter-x"></i></a>
-                  <a href="#"><i className="bi bi-facebook"></i></a>
+                  <a href="https://web.facebook.com/people/Digibiz-Technologies/61558494960962/" target="_blank" rel="noopener noreferrer"><i className="bi bi-facebook"></i></a>
                   <a href="#"><i className="bi bi-linkedin"></i></a>
                   <a href="#"><i className="bi bi-github"></i></a>
                 </div>
@@ -92,7 +92,7 @@ export default function TeamPage() {
                 <p className="member-bio">Qui ut autem quo error molestiae. Voluptatem quia eligendi voluptatibus beatae vitae et quis. Quis voluptatem.</p>
                 <div className="member-socials">
                   <a href="#"><i className="bi bi-twitter-x"></i></a>
-                  <a href="#"><i className="bi bi-instagram"></i></a>
+                  <a href="https://www.instagram.com/digibiz_technologies?stkn=aWJvemd3MTMxeGNj" target="_blank" rel="noopener noreferrer"><i className="bi bi-instagram"></i></a>
                   <a href="#"><i className="bi bi-linkedin"></i></a>
                 </div>
               </div>

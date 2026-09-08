@@ -23,8 +23,8 @@ export default function Footer() {
 
   const socials = [
     { icon: "bi-twitter-x", href: "https://twitter.com/digibiztech", label: "Twitter / X" },
-    { icon: "bi-facebook", href: "https://facebook.com/digibiztechnologies", label: "Facebook" },
-    { icon: "bi-instagram", href: "https://instagram.com/digibiztechnologies", label: "Instagram" },
+    { icon: "bi-facebook", href: "https://web.facebook.com/people/Digibiz-Technologies/61558494960962/", label: "Facebook" },
+    { icon: "bi-instagram", href: "https://www.instagram.com/digibiz_technologies?stkn=aWJvemd3MTMxeGNj", label: "Instagram" },
     { icon: "bi-linkedin", href: "https://linkedin.com/company/digibiz-technologies", label: "LinkedIn" },
   ];
 

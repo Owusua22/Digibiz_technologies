@@ -4,7 +4,7 @@ export interface PricingTier {
   badge?: string;
   popular?: boolean;
   priceGHS: string;
-  priceUSD: string;
+
   period: string;
   description: string;
   gifAsset: string;
@@ -48,8 +48,8 @@ export const PRICING_TIERS: PricingTier[] = [
     id: "starter",
     name: "Starter",
     badge: "For Small Businesses & Startups",
-    priceGHS: "GH₵3,500",
-    priceUSD: "$280",
+    priceGHS: "GH₵2,000",
+
     period: "one-time",
     description:
       "Essential digital presence built to give your business credibility, speed, and immediate local visibility.",
@@ -79,8 +79,8 @@ export const PRICING_TIERS: PricingTier[] = [
     name: "Growth",
     badge: "Most Popular",
     popular: true,
-    priceGHS: "GH₵7,500",
-    priceUSD: "$590",
+    priceGHS: "GH₵4,500",
+ 
     period: "one-time",
     description:
       "Complete digital growth package for expanding businesses looking to capture leads and outrank competitors.",
@@ -105,8 +105,8 @@ export const PRICING_TIERS: PricingTier[] = [
     id: "business",
     name: "Business",
     badge: "For Established Companies",
-    priceGHS: "GH₵14,000",
-    priceUSD: "$1,100",
+    priceGHS: "GH₵8,000",
+
     period: "one-time",
     description:
       "Robust e-commerce or custom web application engineered for high-volume transactions and seamless operations.",
@@ -132,7 +132,7 @@ export const PRICING_TIERS: PricingTier[] = [
     name: "Custom / Enterprise",
     badge: "Tailored Architecture",
     priceGHS: "Custom",
-    priceUSD: "Custom",
+
     period: "tailored scope",
     description:
       "Bespoke software, mobile applications, multi-platform systems, and dedicated AI workflows built to your exact specifications.",
@@ -158,7 +158,7 @@ export const SERVICE_ADDONS: ServiceAddon[] = [
     id: "website-maintenance",
     title: "Website Maintenance & Care",
     category: "Support & Security",
-    startingPrice: "GH₵600",
+    startingPrice: "GH₵400",
     period: "/mo",
     description:
       "Keep your website secure, fast, and up-to-date with regular backups, security patches, and content updates.",
@@ -192,7 +192,7 @@ export const SERVICE_ADDONS: ServiceAddon[] = [
     id: "business-automation",
     title: "Business Process Automation",
     category: "Efficiency",
-    startingPrice: "GH₵5,000",
+    startingPrice: "GH₵3,000",
     period: "one-time",
     description:
       "Eliminate repetitive manual tasks by seamlessly linking your CRM, forms, WhatsApp, spreadsheets, and accounting tools.",
