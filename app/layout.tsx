@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 
 // Import your vendor stylesheets directly
@@ -136,6 +137,20 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-TQ80RJ4XS3"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-TQ80RJ4XS3');
+          `}
+        </Script>
+      </head>
       <body className={plusJakartaSans.className} suppressHydrationWarning>
         {/* Organization Structured Data (JSON-LD) */}
         <script
