@@ -41,3 +41,9 @@ body.admin-page {
 body.admin-page main.main {
   margin: 0;
 }
+
+/* Marketing CTA: the floating WhatsApp button is part of the public
+   marketing chrome, so hide it on admin routes alongside the header. */
+body.admin-page .dbz-wa-float {
+  display: none !important;
+}

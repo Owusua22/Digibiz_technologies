@@ -5,6 +5,7 @@ import Link from "next/link";
 import ServicesFAQ from "@/components/ServicesFaq";
 import { SERVICE_GIF_MAP } from "@/data/gifs";
 import { services } from "@/data/services";
+import { getServiceWhatsAppUrl, SITE_URL } from "@/lib/site";
 
 /* ============================================
    SEO METADATA
@@ -12,17 +13,17 @@ import { services } from "@/data/services";
 
 export const metadata: Metadata = {
   title:
-    "Digital Services for Growing Businesses | Digibiz Technologies Ghana",
+    "Our Services — Web, Mobile App, Marketing, Design, SEO & IT",
   description:
-    "Grow your business with conversion-focused websites, SEO and digital marketing, automation, practical AI, branding, and digital strategy from Digibiz Technologies.",
+    "Digibiz Technologies delivers six core services in Ghana: web development, mobile app development, digital marketing, graphic design, SEO, and business & IT solutions.",
   alternates: {
     canonical: "/services",
   },
   openGraph: {
     title:
-      "Digital Services Built to Help Your Business Grow | Digibiz Technologies",
+      "Web Development, Mobile Apps, Marketing, Design, SEO & IT Solutions | Digibiz Technologies",
     description:
-      "From getting found online to automating repetitive work, explore practical digital services designed to attract customers, save time, and support business growth.",
+      "Six practical digital services for growing businesses: web development, mobile app development, digital marketing, graphic design, SEO, and business & IT solutions.",
     url: "/services",
     siteName: "Digibiz Technologies",
     type: "website",
@@ -39,11 +40,11 @@ const servicesSchema = {
   "@type": "ItemList",
   name: "Digibiz Technologies Services",
   description:
-    "Digital services designed to help businesses attract customers, improve operations, strengthen their brands, and make smarter technology investments.",
+    "Six core digital services for growing businesses: web development, mobile app development, digital marketing, graphic design, SEO, and business & IT solutions.",
   itemListElement: services.map((service, index) => ({
     "@type": "ListItem",
     position: index + 1,
-    url: `https://digibiztechnologies.com/services/${service.slug}`,
+    url: `${SITE_URL}/services/${service.slug}`,
     item: {
       "@type": "Service",
       name: service.title,
@@ -51,7 +52,7 @@ const servicesSchema = {
       provider: {
         "@type": "Organization",
         name: "Digibiz Technologies",
-        url: "https://digibiztechnologies.com",
+        url: SITE_URL,
       },
       areaServed: {
         "@type": "Country",
@@ -104,7 +105,7 @@ const stats = [
   },
   {
     number: "6",
-    label: "Connected Digital Services",
+    label: "Core Service Pillars",
   },
   {
     number: "1",
@@ -140,62 +141,62 @@ const serviceCardContent: Record<
     cta: "Learn More",
   },
 
-  "digital-marketing-seo": {
+  "mobile-app-development": {
+    image: "/assets/img/services/service_3.jpg",
+    kicker: "Your business, in their pocket",
+    features: [
+      "Android, iOS and cross-platform builds",
+      "Mobile Money & card payments built in",
+      "App store submission handled for you",
+      "Updates, monitoring & ongoing support",
+    ],
+    cta: "Learn More",
+  },
+
+  "digital-marketing": {
     image: "/assets/services/digital-marketing-seo.jpg",
-    kicker: "Get found by people ready to act",
+    kicker: "Reach people ready to act",
     features: [
-      "SEO & local Google visibility",
       "Google Ads focused on measurable results",
-      "Social media & content that build trust",
-      "Lead tracking with clear monthly reporting",
+      "Social media content & paid campaigns",
+      "Email journeys that nurture leads",
+      "Clear monthly reporting on every cedi spent",
     ],
     cta: "Learn More",
   },
 
-  "business-automation": {
-    image: "/assets/services/business-automation.jpg",
-    kicker: "Give your team valuable time back",
-    features: [
-      "Automated repetitive business workflows",
-      "Connected forms, payments, CRM & messaging",
-      "Email & WhatsApp follow-ups on autopilot",
-      "Live dashboards for clearer visibility",
-    ],
-    cta: "Learn More",
-  },
-
-  "ai-solutions": {
-    image: "/assets/services/ai-solutions.jpg",
-    kicker: "Put practical AI to work",
-    features: [
-      "AI chat support for common questions",
-      "Content assistants for faster first drafts",
-      "Smarter lead qualification & routing",
-      "Custom AI integrated with existing workflows",
-    ],
-    cta: "Learn More",
-  },
-
-  "branding-graphic-design": {
+  "graphic-design": {
     image: "/assets/services/branding-graphic-design.jpg",
     kicker: "Look like the business customers trust",
     features: [
       "Distinctive logo & visual identity",
       "Clear brand guidelines for consistency",
       "Social media & marketing design assets",
-      "Professional presentations & promotional materials",
+      "Packaging, print & presentation design",
     ],
     cta: "Learn More",
   },
 
-  "business-digital-strategy": {
-    image: "/assets/services/business-digital-strategy.jpg",
-    kicker: "Know what to invest in next",
+  "seo-services": {
+    image: "/assets/img/services/seo.jpg",
+    kicker: "Be found on Google",
     features: [
-      "Complete digital presence audit",
-      "Competitor & market opportunity research",
-      "Technology recommendations for your needs",
-      "Prioritized growth roadmap with clear next steps",
+      "Technical fixes that unblock your rankings",
+      "Local SEO & Google Business Profile",
+      "Content written around real customer searches",
+      "Rank, traffic & lead reporting",
+    ],
+    cta: "Learn More",
+  },
+
+  "business-it-solutions": {
+    image: "/assets/services/business-automation.jpg",
+    kicker: "Work smarter, stay secure",
+    features: [
+      "Automated workflows for repetitive tasks",
+      "Managed IT support & proactive maintenance",
+      "Cloud hosting, backups & cybersecurity",
+      "Systems integration that keeps data in sync",
     ],
     cta: "Learn More",
   },
@@ -622,6 +623,22 @@ export default function ServicesPage() {
           transform: translateX(4px); 
         }
 
+        /* Service-scoped WhatsApp link — sits next to "Learn More" and reuses
+           the same type scale so the card keeps its original weight. */
+        .dt-services-page .dt-service-wa-link {
+          display: inline-flex; 
+          align-items: center; 
+          gap: 6px;
+          color: ${accent} !important; 
+          font-weight: 700; 
+          font-size: 0.9rem; 
+          text-decoration: none !important;
+          white-space: nowrap;
+          transition: opacity 0.2s ease;
+        }
+        .dt-services-page .dt-service-wa-link i { font-size: 1.05rem; }
+        .dt-services-page .dt-service-wa-link:hover { opacity: 0.75; }
+
         /* ============================================
            3. PROCESS SECTION
            ============================================ */
@@ -857,10 +874,11 @@ export default function ServicesPage() {
               </h1>
 
               <p>
-                Need more customers, a website that converts, or fewer
-                hours lost to repetitive work? We combine web development,
-                marketing, automation, AI, branding, and strategy to solve
-                the problems slowing your business down.
+                Need more customers, a website or app that converts, or fewer
+                hours lost to repetitive work? Our six core services — web and
+                mobile development, digital marketing, graphic design, SEO, and
+                business & IT solutions — solve the problems slowing your
+                business down.
               </p>
 
               <div className="dt-services-hero-ctas">
@@ -898,7 +916,7 @@ export default function ServicesPage() {
 
                 <div className="stat">
                   <strong>6</strong>
-                  <span>Connected Services</span>
+                  <span>Core Services</span>
                 </div>
               </div>
             </div>
@@ -966,9 +984,10 @@ export default function ServicesPage() {
               className="section-description mx-auto"
               style={{ maxWidth: "680px" }}
             >
-              You do not need more technology for the sake of it. You need
-              the right solution for the result you want — more customers,
-              less manual work, a stronger brand, or a clearer path forward.
+              You do not need more technology for the sake of it. Pick the
+              service that matches the result you want — more customers,
+              a stronger brand, a found-on-Google presence, or less
+              manual work.
             </p>
           </div>
 
@@ -1044,7 +1063,9 @@ export default function ServicesPage() {
                       ))}
                     </ul>
 
-                    <div className="pt-3 border-top mt-4">
+                    <div
+                      className="pt-3 border-top mt-4 d-flex align-items-center justify-content-between gap-3 flex-wrap"
+                    >
                       <Link
                         href={`/services/${service.slug}`}
                         className="dt-service-detail-link"
@@ -1053,6 +1074,17 @@ export default function ServicesPage() {
                         <span>{content.cta}</span>
                         <i className="bi bi-arrow-right" />
                       </Link>
+                      <a
+                        href={getServiceWhatsAppUrl(service.title)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="dt-service-wa-link"
+                        aria-label={`Chat with Digibiz on WhatsApp about ${service.title}`}
+                        data-ga-label="service card"
+                      >
+                        <i className="bi bi-whatsapp" aria-hidden="true" />
+                        <span>WhatsApp</span>
+                      </a>
                     </div>
                   </div>
                 </article>
@@ -1169,8 +1201,8 @@ export default function ServicesPage() {
               style={{ maxWidth: "650px" }}
             >
               Instead of coordinating separate providers for your website,
-              marketing, automation, AI, design, and strategy, you can keep
-              the pieces connected under one team.
+              mobile app, marketing, design, search visibility, and IT, you
+              can keep the pieces connected under one team.
             </p>
           </div>
 

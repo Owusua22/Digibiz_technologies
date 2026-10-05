@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import {
   serviceDetails,
   SERVICE_SLUGS,
+  LEGACY_SERVICE_SLUGS,
   getRelatedServices,
   getSubServiceAnchorId,
   getServiceHeroImage,
@@ -13,6 +14,7 @@ import {
   getSubServiceImageAlt,
 } from "@/data/services";
 import { SERVICE_GIF_MAP } from "@/data/gifs";
+import { getServiceWhatsAppUrl, SITE_URL } from "@/lib/site";
 
 /* ============================================
    STATIC PARAMS + METADATA
@@ -43,7 +45,7 @@ export function generateMetadata({
     const heroImage = getServiceHeroImage(slug);
 
     return {
-      title: `${service.title} | Digibiz Technologies`,
+      title: service.title,
       description: service.metaDescription,
       keywords,
       alternates: { canonical: `/services/${service.slug}` },
@@ -81,7 +83,6 @@ const accentDark = "#066B5A";
 const accentHover = "#077A69";
 const ink = "#0A0A0A";
 
-const SITE_URL = "https://digibiztechnologies.com";
 
 /** Faces used in the social-proof cluster. Swap for real client photos anytime. */
 const AVATAR_CLUSTER = [
@@ -101,7 +102,14 @@ export default async function ServiceDetailsPage({
 }) {
   const { slug } = await params;
   const service = serviceDetails[slug];
-  if (!service) notFound();
+
+  if (!service) {
+    /* Keep previously published service URLs alive after the service
+       restructure instead of returning a 404 for existing backlinks. */
+    const successorSlug = LEGACY_SERVICE_SLUGS[slug];
+    if (successorSlug) redirect(`/services/${successorSlug}`);
+    notFound();
+  }
 
   const relatedServices = getRelatedServices(slug, 3);
   const gifData = SERVICE_GIF_MAP[slug];
@@ -110,6 +118,10 @@ export default async function ServiceDetailsPage({
   const heroImage = getServiceHeroImage(slug);
   const gallery = getServiceGallery(slug, 3);
   const serviceUrl = `${SITE_URL}/services/${service.slug}`;
+  /* Pre-filled with the service name so the WhatsApp thread arrives already
+     qualified — no extra GA4 code needed, the delegated tracker in
+     GoogleAnalytics.tsx fires for every WhatsApp link on the document. */
+  const whatsappUrl = getServiceWhatsAppUrl(service.title);
 
   /* --------------------------------------------
      STRUCTURED DATA (images included)
@@ -584,6 +596,17 @@ export default async function ServiceDetailsPage({
                   Discuss Your Project
                   <i className="bi bi-arrow-right"></i>
                 </Link>
+                <a
+                  href={whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="dt-btn dt-btn-outline"
+                  aria-label={`Chat with Digibiz on WhatsApp about ${service.title}`}
+                  data-ga-label="service hero"
+                >
+                  Chat on WhatsApp
+                  <i className="bi bi-whatsapp" aria-hidden="true"></i>
+                </a>
                 <Link href="/pricing" className="dt-btn dt-btn-outline">
                   View Pricing
                   <i className="bi bi-arrow-right"></i>
@@ -1035,6 +1058,17 @@ export default async function ServiceDetailsPage({
                 <Link href="/contact" className="dt-btn dt-btn-primary">
                   Start a Project
                 </Link>
+                <a
+                  href={whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="dt-btn dt-btn-outline"
+                  aria-label={`Chat with Digibiz on WhatsApp about ${service.title}`}
+                  data-ga-label="service final cta"
+                >
+                  Chat on WhatsApp
+                  <i className="bi bi-whatsapp" aria-hidden="true"></i>
+                </a>
                 <Link href="/pricing" className="dt-btn dt-btn-outline">
                   View Pricing
                 </Link>

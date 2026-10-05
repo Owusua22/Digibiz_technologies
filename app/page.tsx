@@ -3,25 +3,26 @@ import type { CSSProperties } from "react";
 import Link from "next/link";
 import { GIFS } from "@/data/gifs";
 import { services } from "@/data/services";
+import { SITE_URL } from "@/lib/site";
 
 /* ============================================
    SEO METADATA
    ============================================ */
 export const metadata: Metadata = {
   title:
-    "Digibiz Technologies | Web Development | Digital Marketing | Automation | AI & Strategy Agency in Ghana",
+    "Digibiz Technologies | Web & Mobile Development, Digital Marketing, Design, SEO & IT in Ghana",
   description:
-    "Digibiz Technologies builds websites, runs digital marketing and SEO campaigns, automates business processes, delivers practical AI solutions, and develops growth strategies that help Ghanaian businesses grow online. Get started today.",
+    "Digibiz Technologies builds websites and mobile apps, runs digital marketing campaigns, creates brands, improves Google visibility with SEO, and delivers business & IT solutions that help Ghanaian businesses grow. Get started today.",
   keywords: [
     "Digibiz Technologies",
     "web development Ghana",
     "website design Ghana",
     "digital marketing agency Ghana",
+    "mobile app development Ghana",
     "SEO services Ghana",
+    "graphic design agency Ghana",
     "business automation Ghana",
-    "AI solutions Ghana",
-    "branding and design agency Ghana",
-    "digital strategy Ghana",
+    "IT solutions Ghana",
     "digital solutions company Ghana",
   ],
   alternates: { canonical: "/" },
@@ -40,7 +41,7 @@ export const metadata: Metadata = {
     title:
       "Digibiz Technologies | Digital Solutions That Help Your Business Grow",
     description:
-      "Websites, digital marketing, business automation, AI solutions, branding, and digital strategy — built to help businesses work smarter, reach more customers, and grow online.",
+      "Web and mobile development, digital marketing, graphic design, SEO, and business & IT solutions — built to help businesses work smarter, reach more customers, and grow online.",
     url: "/",
     siteName: "Digibiz Technologies",
     type: "website",
@@ -59,7 +60,7 @@ export const metadata: Metadata = {
     title:
       "Digibiz Technologies | Digital Solutions That Help Your Business Grow",
     description:
-      "Websites, digital marketing, business automation, branding and AI solutions for growing businesses in Ghana.",
+      "Web and mobile development, digital marketing, graphic design, SEO, and business & IT solutions for growing businesses in Ghana.",
     images: ["/assets/img/about/about-8.webp"],
   },
 };
@@ -69,10 +70,10 @@ const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
   name: "Digibiz Technologies",
-  url: "https://digibiztechnologies.com",
-  logo: "https://digibiztechnologies.com/Digibiz_logo.png",
+  url: SITE_URL,
+  logo: `${SITE_URL}/Digibiz_logo.png`,
   description:
-    "Digibiz Technologies helps businesses grow online through website development, digital marketing & SEO, business automation, AI solutions, branding & graphic design, and business & digital strategy.",
+    "Digibiz Technologies helps businesses grow online through web development, mobile app development, digital marketing, graphic design, SEO, and business & IT solutions.",
   address: {
     "@type": "PostalAddress",
     addressCountry: "GH",
@@ -83,10 +84,10 @@ const organizationSchema = {
 const webPageSchema = {
   "@context": "https://schema.org",
   "@type": "WebPage",
-  name: "Digibiz Technologies | Web Development, Digital Marketing, Automation, AI & Strategy Agency in Ghana",
+  name: "Digibiz Technologies | Web & Mobile Development, Digital Marketing, Design, SEO & IT",
   description:
-    "Digibiz Technologies builds websites, runs digital marketing and SEO campaigns, automates business processes, delivers practical AI solutions, and develops growth strategies for growing businesses.",
-  url: "https://digibiztechnologies.com",
+    "Digibiz Technologies builds websites and mobile apps, runs digital marketing campaigns, creates brands, improves Google visibility with SEO, and delivers business & IT solutions for growing businesses.",
+  url: SITE_URL,
 };
 
 /* ============================================
@@ -237,7 +238,7 @@ const whyChooseItems = [
   {
     icon: "bi-cpu",
     title: "Smart & Modern Technology",
-    text: "From websites and automation to AI and digital marketing, we use the right technology to make your business more efficient and competitive.",
+    text: "From websites, mobile apps and SEO to digital marketing and business & IT solutions, we use the right technology to make your business more efficient and competitive.",
   },
   {
     icon: "bi-headset",
@@ -549,7 +550,7 @@ export default function Home() {
               We Help Businesses <span className="dt-hero-highlight">Increase their brand visibility Online</span>
               </h1>
               <p className="dt-hero-paragraph">
-            Your business deserves more than just a good-looking website. At DigiBiz Technologies, we combine web development, digital marketing, automation, and smart technology to help you reach the right customers, save time, and turn more opportunities into sales.
+            Your business deserves more than just a good-looking website. At DigiBiz Technologies, we combine web and mobile development, digital marketing, design, SEO, and business & IT solutions to help you reach the right customers, save time, and turn more opportunities into sales.
               </p>
               <div className="dt-hero-cta-group">
                 <Link href="/contact" className="dt-btn dt-btn-primary">

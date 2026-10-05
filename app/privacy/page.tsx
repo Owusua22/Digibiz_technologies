@@ -1,4 +1,13 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Privacy Policy",
+  description:
+    "How DigiBiz Technologies collects, uses and protects your personal information when you use our website or contact us.",
+  alternates: { canonical: "/privacy" },
+  robots: { index: true, follow: true },
+};
 
 export default function Privacy() {
   return (
@@ -23,7 +32,7 @@ export default function Privacy() {
               <div className="last-updated">Effective Date: February 27, 2025</div>
               <h1>Digibiz Technologies Privacy Policy</h1>
               <p className="intro-text">
-                At Digibiz Technologies, we are committed to protecting your privacy. This Privacy Policy describes how we collect, use, process, and disclose your information when you visit our website, interact with our services, or engage with us for web development, digital marketing, business automation, AI solutions, branding, and digital strategy services.
+                At Digibiz Technologies, we are committed to protecting your privacy. This Privacy Policy describes how we collect, use, process, and disclose your information when you visit our website, interact with our services, or engage with us for web development, mobile app development, digital marketing, graphic design, SEO, and business &amp; IT solutions services.
               </p>
             </div>
           </div>

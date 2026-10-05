@@ -1,6 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
 
+import { services } from "@/data/services";
+import { WHATSAPP_URL } from "@/lib/site";
+
 export default function Footer() {
   const quickLinks = [
     { label: "Home", href: "/" },
@@ -12,14 +15,10 @@ export default function Footer() {
     { label: "Contact", href: "/contact" },
   ];
 
-  const services = [
-    { label: "Website & Web Development", href: "/services/website-development" },
-    { label: "Digital Marketing & SEO", href: "/services/digital-marketing-seo" },
-    { label: "Business Automation", href: "/services/business-automation" },
-    { label: "AI Solutions", href: "/services/ai-solutions" },
-    { label: "Branding & Graphic Design", href: "/services/branding-graphic-design" },
-    { label: "Business & Digital Strategy", href: "/services/business-digital-strategy" },
-  ];
+  const serviceLinks = services.map((service) => ({
+    label: service.title,
+    href: `/services/${service.slug}`,
+  }));
 
   const socials = [
     { icon: "bi-twitter-x", href: "https://twitter.com/digibiztech", label: "Twitter / X" },
@@ -96,7 +95,7 @@ export default function Footer() {
             </Link>
             <p className="dg-desc">
               We partner with growing businesses to deliver high-performance websites,
-              ROI-focused marketing, automation, and practical AI solutions.
+              ROI-focused marketing, SEO, and business &amp; IT solutions.
             </p>
             <ul className="dg-contact">
               <li>
@@ -110,6 +109,18 @@ export default function Footer() {
               <li>
                 <i className="bi bi-envelope"></i>
                 <a href="mailto:digibiztechnologies1@gmail.com">digibiztechnologies1@gmail.com</a>
+              </li>
+              <li>
+                <i className="bi bi-whatsapp"></i>
+                <a
+                  href={WHATSAPP_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Chat with Digibiz on WhatsApp"
+                  data-ga-label="footer"
+                >
+                  Chat on WhatsApp
+                </a>
               </li>
             </ul>
           </div>
@@ -130,7 +141,7 @@ export default function Footer() {
           <div className="dg-col dg-links">
             <h4>Our Services</h4>
             <ul>
-              {services.map((l) => (
+              {serviceLinks.map((l) => (
                 <li key={l.href}>
                   <Link href={l.href}>{l.label}</Link>
                 </li>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import ButtonLink from "@/components/ButtonLink";
 import { services } from "@/data/services";
+import { SITE_URL } from "@/lib/site";
 
 /* ============================================
    SEO METADATA
@@ -9,12 +10,12 @@ import { services } from "@/data/services";
 export const metadata: Metadata = {
   title: "About Digibiz Technologies | Digital Growth Partner in Ghana",
   description:
-    "Digibiz Technologies is a Ghana-based digital agency helping businesses grow through websites, digital marketing, automation and AI solutions. Learn our story, values, and how we work.",
+    "Digibiz Technologies is a Ghana-based digital agency helping businesses grow through web and mobile development, digital marketing, graphic design, SEO, and business & IT solutions. Learn our story, values, and how we work.",
   alternates: { canonical: "/about" },
   openGraph: {
     title: "About Digibiz Technologies | Digital Growth Partner in Ghana",
     description:
-      "Meet the team helping Ghanaian businesses grow online through websites, digital marketing, automation and AI solutions built to deliver real results.",
+      "Meet the team helping Ghanaian businesses grow online through web and mobile development, digital marketing, graphic design, SEO, and business & IT solutions built to deliver real results.",
     url: "/about",
     siteName: "Digibiz Technologies",
     type: "website",
@@ -26,9 +27,9 @@ const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "AboutPage",
   name: "About Digibiz Technologies",
-  url: "https://digibiztechnologies.com/about",
+  url: `${SITE_URL}/about`,
   description:
-    "Digibiz Technologies is a Ghana-based digital agency helping businesses grow through websites, digital marketing, automation and AI solutions.",
+    "Digibiz Technologies is a Ghana-based digital agency helping businesses grow through web and mobile development, digital marketing, graphic design, SEO, and business & IT solutions.",
 };
 
 /* Brand colors + font — kept identical to the homepage, and locked with !important below */
@@ -53,7 +54,7 @@ const withDigibiz = ["A dedicated contact and fast, reliable turnaround", "Solut
 
 const processSteps = [
   { number: "01", title: "Discover", text: "We learn your business, your customers, and what's actually holding your growth back." },
-  { number: "02", title: "Strategize", text: "We map out the right mix of website, marketing, automation or AI for your goals and budget." },
+  { number: "02", title: "Strategize", text: "We map out the right mix of website, app, marketing, design, SEO or IT for your goals and budget." },
   { number: "03", title: "Design & Build", text: "Our team designs, develops and tests your solution to a professional standard." },
   { number: "04", title: "Launch", text: "We deploy your project on schedule, with everything checked and working." },
   { number: "05", title: "Grow & Support", text: "We stay on to monitor performance, make improvements, and support you as you scale." },
@@ -252,7 +253,7 @@ export default function AboutPage() {
             <div className="dt-about-hero-text" data-aos="fade-up" data-aos-delay="100">
               <span className="dt-eyebrow dt-eyebrow-light">About Digibiz Technologies</span>
               <h1>We Don&apos;t Just Build Digital Products — <span>We Build Business Growth.</span></h1>
-              <p>At DigiBiz Technologies, we help businesses make better use of technology to attract customers, work smarter, and grow. From websites and digital marketing to automation and AI, we create practical solutions around your goals and not solutions that simply look good on paper.</p>
+              <p>At DigiBiz Technologies, we help businesses make better use of technology to attract customers, work smarter, and grow. From websites, mobile apps and SEO to digital marketing and business &amp; IT solutions, we create practical solutions around your goals and not solutions that simply look good on paper.</p>
               <div className="dt-about-hero-ctas">
                 <Link href="/contact" className="dt-btn dt-btn-primary">Start Your Project <i className="bi bi-arrow-right"></i></Link>
                 <Link href="/portfolio" className="dt-btn dt-btn-outline"><span>See Our Work</span> <i className="bi bi-arrow-right"></i></Link>
@@ -309,10 +310,10 @@ export default function AboutPage() {
   </p>
 
   <p style={{ color: "#555" }}>
-    We bring web development, digital marketing, automation, AI, and creative
-    solutions together under one roof. Instead of managing different providers
-    for every part of your digital journey, you get one team that understands
-    your goals and builds solutions that work together.
+    We bring web and mobile development, digital marketing, graphic design, SEO,
+    and business &amp; IT solutions together under one roof. Instead of managing
+    different providers for every part of your digital journey, you get one team
+    that understands your goals and builds solutions that work together.
   </p>
 
   <ul className="dt-who-list">
@@ -425,9 +426,9 @@ export default function AboutPage() {
 
         <p>
           We decided to build something different. DigiBiz Technologies brings
-          development, digital marketing, SEO, automation, AI, and creative
-          services together so businesses don&apos;t have to figure everything
-          out on their own.
+          web and mobile development, digital marketing, graphic design, SEO, and
+          business &amp; IT solutions together so businesses don&apos;t have to
+          figure everything out on their own.
         </p>
 
         <p>
@@ -470,7 +471,7 @@ export default function AboutPage() {
           <div className="text-center mb-4">
             <span className="dt-eyebrow">What We Do</span>
             <h2 className="section-headline mb-3">Every Digital Service Your Business Needs, Under One Roof</h2>
-            <p className="section-description">No juggling five different freelancers. One team, six capabilities, one growth strategy.</p>
+            <p className="section-description">No juggling five different freelancers. One team, six core services, one growth strategy.</p>
           </div>
           <div className="dt-services-grid">
             {services.map((service) => (

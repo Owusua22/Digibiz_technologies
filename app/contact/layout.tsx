@@ -1,16 +1,15 @@
 import type { Metadata } from "next";
-
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.digibiztechnologies.com";
+import { SITE_URL as siteUrl } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Contact Digibiz Technologies | Digital Solutions & Business Growth",
   description:
-    "Contact Digibiz Technologies for professional website development, digital marketing & SEO, business automation, AI solutions, branding, and business strategy. Get in touch via email, phone, or our contact form. We respond within one business day.",
+    "Contact Digibiz Technologies for web development, mobile app development, digital marketing, graphic design, SEO, and business & IT solutions. Get in touch via email, phone, WhatsApp, or our contact form. We respond within one business day.",
   alternates: { canonical: "/contact" },
   openGraph: {
     title: "Contact Digibiz Technologies | Digital Solutions & Business Growth",
     description:
-      "Reach out to Digibiz Technologies for websites, digital marketing, automation, AI, branding, and strategy. We help growing businesses succeed online.",
+      "Reach out to Digibiz Technologies for websites, mobile apps, digital marketing, graphic design, SEO, and business & IT solutions. We help growing businesses succeed online.",
     url: `${siteUrl}/contact`,
     siteName: "Digibiz Technologies",
     type: "website",
@@ -20,7 +19,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Contact Digibiz Technologies | Digital Solutions & Business Growth",
     description:
-      "Get in touch with Digibiz Technologies for web development, digital marketing, automation, AI, branding, and strategy.",
+      "Get in touch with Digibiz Technologies for web development, mobile app development, digital marketing, graphic design, SEO, and business & IT solutions.",
   },
 };
 
@@ -30,7 +29,7 @@ const contactPageSchema = {
   name: "Contact Digibiz Technologies",
   url: `${siteUrl}/contact`,
   description:
-    "Contact Digibiz Technologies for professional website development, digital marketing, business automation, AI solutions, branding, and digital strategy services.",
+    "Contact Digibiz Technologies for professional web development, mobile app development, digital marketing, graphic design, SEO, and business & IT solutions services.",
   mainEntity: {
     "@type": "Organization",
     name: "Digibiz Technologies",

@@ -5,6 +5,8 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 
+import { WHATSAPP_URL } from "@/lib/site";
+
 /* ============================================
    CONFIG
    ============================================ */
@@ -357,6 +359,18 @@ export default function Header() {
           >
             <i className="bi bi-telephone" aria-hidden="true"></i>
             <span>{CONTACT.phoneDisplay}</span>
+          </a>
+          <a
+            href={WHATSAPP_URL}
+            className="dbz-drawer-contact"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Chat with Digibiz on WhatsApp"
+            data-ga-label="mobile drawer"
+            tabIndex={mobileOpen ? 0 : -1}
+          >
+            <i className="bi bi-whatsapp" aria-hidden="true"></i>
+            <span>Chat on WhatsApp</span>
           </a>
 
           <div className="dbz-drawer-socials">

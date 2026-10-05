@@ -1,29 +1,46 @@
 "use client";
 
-import { useState, useCallback, type FormEvent } from "react";
+import { useState, useCallback, useRef, type FormEvent } from "react";
 import Link from "next/link";
+import { trackGenerateLead } from "@/lib/analytics";
+import {
+  isValidLead,
+  normalizeLead,
+  validateLead,
+  type LeadErrors,
+  type LeadPayload,
+} from "@/lib/leads";
+import {
+  BUSINESS_EMAIL,
+  BUSINESS_PHONE_DISPLAY,
+  BUSINESS_PHONE_E164,
+  WHATSAPP_URL,
+} from "@/lib/site";
 
 const ACCENT = "#08947D";
 const ACCENT_DARK = "#066B5A";
 const INK = "#0A0A0A";
 
-const RECIPIENT = "digibiztechnologies1@gmail.com";
+const RECIPIENT = BUSINESS_EMAIL;
 
 const CONTACT_INFO = {
   email: RECIPIENT,
-  phoneDisplay: "+233 553 191 734",
-  phoneHref: "tel:+233553191734",
+  phoneDisplay: BUSINESS_PHONE_DISPLAY,
+  phoneHref: `tel:${BUSINESS_PHONE_E164}`,
   location: "Accra, Ghana",
   hours: ["Monday - Friday: 9:00 AM - 6:00 PM", "Saturday: 10:00 AM - 2:00 PM"],
 };
 
+/* Kept as a plain list rather than importing @/data/services: this is a
+   client component and the full service catalogue would be pulled into the
+   browser bundle just to fill a <select>. */
 const SERVICES = [
-  "Website & Web Development",
-  "Digital Marketing & SEO",
-  "Business Automation",
-  "AI Solutions",
-  "Branding & Graphic Design",
-  "Business & Digital Strategy",
+  "Web Development",
+  "Mobile App Development",
+  "Digital Marketing",
+  "Graphic Design",
+  "SEO",
+  "Business & IT Solutions",
   "Other",
 ];
 
@@ -48,10 +65,7 @@ const FAQ_ITEMS = [
   { q: "What information should I prepare before contacting you?", a: "Have a rough idea of your goals, timeline, and budget. But even if you are just exploring, we are happy to help you figure out the right direction." },
 ];
 
-function buildMailtoUrl(data: {
-  name: string; email: string; phone: string;
-  company: string; service: string; message: string;
-}): string {
+function buildMailtoUrl(data: LeadPayload): string {
   const subject = `New Website Enquiry - ${data.name}`;
   const parts = [
     "Hello Digibiz Technologies,", "",
@@ -66,49 +80,101 @@ function buildMailtoUrl(data: {
   return `mailto:${RECIPIENT}?${params.toString()}`;
 }
 
-type FormStatus = "idle" | "opened";
-type FieldErrors = Record<string, string>;
+type FormStatus = "idle" | "submitting" | "submitted";
 
 export default function ContactPage() {
   const [status, setStatus] = useState<FormStatus>("idle");
-  const [errors, setErrors] = useState<FieldErrors>({});
+  const [errors, setErrors] = useState<LeadErrors>({});
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const leadTrackedRef = useRef(false);
+  /** Last accepted payload, used to offer the mailto fallback. */
+  const [lastLead, setLastLead] = useState<LeadPayload | null>(null);
 
-  const clearError = useCallback((field: string) => {
+  const clearError = useCallback((field: keyof LeadErrors) => {
     setErrors((prev) => { const n = { ...prev }; delete n[field]; return n; });
   }, []);
 
-  const validate = useCallback((fd: FormData): boolean => {
-    const e: FieldErrors = {};
-    const name = ((fd.get("name") as string) || "").trim();
-    const email = ((fd.get("email") as string) || "").trim();
-    const service = (fd.get("service") as string) || "";
-    const message = ((fd.get("message") as string) || "").trim();
-    if (!name || name.length < 2) e.name = "Please enter your name (at least 2 characters).";
-    if (name.length > 150) e.name = "Name must be 150 characters or fewer.";
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) e.email = "Please enter a valid email address.";
-    if (!service) e.service = "Please select a service.";
-    if (!message || message.length < 10) e.message = "Please enter a message (at least 10 characters).";
-    if (message.length > 5000) e.message = "Message must be 5,000 characters or fewer.";
-    setErrors(e);
-    return Object.keys(e).length === 0;
-  }, []);
-
-  const handleSubmit = useCallback((ev: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = useCallback(async (ev: FormEvent<HTMLFormElement>) => {
     ev.preventDefault();
-    if (status === "opened") return;
+    if (status === "submitting" || status === "submitted") return;
+
+    // Captured before any await: React resets `currentTarget` once the
+    // dispatch completes, so the node is grabbed while it is still live.
     const form = ev.currentTarget;
     const fd = new FormData(form);
-    if (!validate(fd)) return;
-    const get = (k: string) => ((fd.get(k) as string) || "").trim();
-    window.location.href = buildMailtoUrl({
-      name: get("name"), email: get("email"), phone: get("phone"),
-      company: get("company"), service: (fd.get("service") as string) || "", message: get("message"),
-    });
-    setStatus("opened");
-    form.reset();
-  }, [status, validate]);
 
-  const resetForm = useCallback(() => { setStatus("idle"); setErrors({}); }, []);
+    const honeypot = (fd.get("website") as string) ?? "";
+    const lead = normalizeLead({
+      name: fd.get("name"),
+      email: fd.get("email"),
+      phone: fd.get("phone"),
+      company: fd.get("company"),
+      service: fd.get("service"),
+      message: fd.get("message"),
+    });
+
+    // Client-side validation failed -> no conversion is recorded.
+    const nextErrors = validateLead(lead);
+    setErrors(nextErrors);
+    if (!isValidLead(nextErrors)) return;
+
+    setSubmitError(null);
+    setStatus("submitting");
+    setLastLead(lead);
+
+    // --- Backend request: this is the only step that can confirm a lead ---
+    let accepted = false;
+    try {
+      const res = await fetch("/api/leads", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...lead, website: honeypot }),
+      });
+
+      accepted = res.ok;
+
+      // Surface server-side field errors instead of guessing at them.
+      if (res.status === 400) {
+        const data = (await res.json().catch(() => null)) as { errors?: LeadErrors } | null;
+        if (data?.errors) setErrors(data.errors);
+      }
+    } catch {
+      // Network failure is a failure, not a lead.
+      accepted = false;
+    }
+
+    if (!accepted) {
+      setStatus("idle");
+      setSubmitError(
+        "We couldn't send your message right now. Please try again, or email us directly below.",
+      );
+      return;
+    }
+
+    // The API accepted and stored the submission: only now is this a lead.
+    if (!leadTrackedRef.current) {
+      leadTrackedRef.current = true;
+      trackGenerateLead("Contact Form Submission", "contact_page");
+    }
+
+    setStatus("submitted");
+    setErrors({});
+    form.reset();
+  }, [status]);
+
+  const resetForm = useCallback(() => {
+    leadTrackedRef.current = false;
+    setLastLead(null);
+    setStatus("idle");
+    setErrors({});
+    setSubmitError(null);
+  }, []);
+
+  const fallbackHref = lastLead
+    ? buildMailtoUrl(lastLead)
+    : `mailto:${RECIPIENT}?subject=${encodeURIComponent("Website Enquiry")}`;
+
+  const submitting = status === "submitting";
 
   return (
     <div className="dt-contact">
@@ -184,25 +250,25 @@ export default function ContactPage() {
                 <h2 className="dt-section-heading">Send Us a Message</h2>
                 <p className="dt-form-intro">
                   Fill out the form below and click &ldquo;Send Message&rdquo; to
-                  open your email app with a pre-filled message. All fields
+                  send your enquiry straight to our team. All fields
                   marked with * are required.
                 </p>
               </div>
 
-              {status === "opened" ? (
+              {status === "submitted" ? (
                 <div className="dt-success-box" role="status" aria-live="polite">
                   <div className="dt-success-icon">
                     <i className="bi bi-envelope-check" aria-hidden="true"></i>
                   </div>
-                  <h3 className="dt-success-title">Your Email App Is Opening</h3>
+                  <h3 className="dt-success-title">Message Sent</h3>
                   <p className="dt-success-text">
-                    Your email application should open with your message ready
-                    to send. Just press Send in your email app to complete your enquiry.
+                    Thank you. Your enquiry has reached us and a member of the team
+                    will get back to you within one business day.
                   </p>
                   <p className="dt-success-fallback">
-                    Didn&apos;t open?{" "}
-                    <a href={`mailto:${RECIPIENT}?subject=${encodeURIComponent("Website Enquiry")}`} className="dt-success-link">
-                      Click here to email us directly
+                    Need to add something?{" "}
+                    <a href={fallbackHref} className="dt-success-link">
+                      Send us an email directly
                     </a>
                   </p>
                   <button type="button" className="dt-btn dt-btn-outline" onClick={resetForm}>
@@ -211,6 +277,19 @@ export default function ContactPage() {
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} noValidate className="dt-form" aria-label="Contact form">
+                  {submitError && (
+                    <div className="dt-submit-error" role="alert">
+                      <i className="bi bi-exclamation-triangle" aria-hidden="true"></i>
+                      <span>{submitError}</span>
+                    </div>
+                  )}
+
+                  {/* Honeypot — hidden from people, tempting to bots. */}
+                  <div className="dt-hp" aria-hidden="true">
+                    <label htmlFor="contact-website">Website</label>
+                    <input type="text" id="contact-website" name="website" tabIndex={-1} autoComplete="off" />
+                  </div>
+
                   <div className="dt-form-row">
                     <div className="dt-field">
                       <label htmlFor="contact-name" className="dt-label">
@@ -228,7 +307,7 @@ export default function ContactPage() {
                         Email Address <span className="dt-required" aria-label="required">*</span>
                       </label>
                       <input type="email" id="contact-email" name="email" required autoComplete="email"
-                        placeholder="e.g. kwame@company.com"
+                        placeholder="Your email address"
                         className={`dt-input ${errors.email ? "dt-input-error" : ""}`}
                         aria-invalid={!!errors.email} aria-describedby={errors.email ? "email-error" : undefined}
                         onChange={() => clearError("email")} />
@@ -279,8 +358,17 @@ export default function ContactPage() {
                       onChange={() => clearError("message")}></textarea>
                     {errors.message && <p className="dt-field-error" id="message-error" role="alert">{errors.message}</p>}
                   </div>
-                  <button type="submit" className="dt-btn dt-btn-primary dt-submit-btn">
-                    Send Message <i className="bi bi-send" aria-hidden="true"></i>
+                  <button type="submit" className="dt-btn dt-btn-primary dt-submit-btn" disabled={submitting}>
+                    {submitting ? (
+                      <>
+                        <span className="dt-spinner" aria-hidden="true"></span>
+                        Sending&hellip;
+                      </>
+                    ) : (
+                      <>
+                        Send Message <i className="bi bi-send" aria-hidden="true"></i>
+                      </>
+                    )}
                   </button>
                 </form>
               )}
@@ -289,6 +377,19 @@ export default function ContactPage() {
                 <p>
                   Prefer to email us directly?{" "}
                   <a href={`mailto:${RECIPIENT}`} className="dt-email-fallback-link">{RECIPIENT}</a>
+                </p>
+                <p>
+                  Rather talk it through?{" "}
+                  <a
+                    href={WHATSAPP_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="dt-email-fallback-link"
+                    aria-label="Chat with Digibiz on WhatsApp"
+                    data-ga-label="contact page fallback"
+                  >
+                    Chat on WhatsApp
+                  </a>
                 </p>
               </div>
             </div>
@@ -309,6 +410,17 @@ export default function ContactPage() {
                   <a href={CONTACT_INFO.phoneHref} className="dt-sidebar-contact">
                     <i className="bi bi-telephone" aria-hidden="true"></i>
                     <span>{CONTACT_INFO.phoneDisplay}</span>
+                  </a>
+                  <a
+                    href={WHATSAPP_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="dt-sidebar-contact"
+                    aria-label="Chat with Digibiz on WhatsApp"
+                    data-ga-label="contact page sidebar"
+                  >
+                    <i className="bi bi-whatsapp" aria-hidden="true"></i>
+                    <span>Chat on WhatsApp</span>
                   </a>
                   <div className="dt-sidebar-contact">
                     <i className="bi bi-geo-alt" aria-hidden="true"></i>
@@ -417,6 +529,16 @@ const contactStyles = `
   .dt-btn-outline-white{background:transparent;color:#fff;border-color:rgba(255,255,255,.4)}
   .dt-btn-outline-white:hover{background:rgba(255,255,255,.1);border-color:#fff}
   .dt-submit-btn{width:100%;padding:16px;font-size:1rem}
+  .dt-submit-btn:disabled{opacity:.75;cursor:progress;transform:none}
+  .dt-spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.45);border-top-color:#fff;border-radius:50%;animation:dt-spin .7s linear infinite}
+  @keyframes dt-spin{to{transform:rotate(360deg)}}
+
+  /* Submission failure banner — reuses the existing error tokens */
+  .dt-submit-error{display:flex;align-items:flex-start;gap:10px;margin-bottom:22px;padding:14px 16px;background:var(--error-bg);border:1px solid rgba(220,38,38,.25);border-radius:10px;color:#b91c1c;font-size:.9rem;line-height:1.55}
+  .dt-submit-error i{flex-shrink:0;margin-top:2px}
+
+  /* Honeypot: removed from the accessibility tree and the visual flow */
+  .dt-hp{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}
 
   .dt-success-box{text-align:center;padding:48px 24px}
   .dt-success-icon{font-size:3rem;color:var(--accent);margin-bottom:16px}
@@ -427,6 +549,7 @@ const contactStyles = `
   .dt-success-link:hover{color:var(--accent-dark)}
 
   .dt-email-fallback{margin-top:24px;padding-top:20px;border-top:1px solid var(--border);text-align:center;font-size:.9rem;color:var(--muted)}
+  .dt-email-fallback p+p{margin-top:10px}
   .dt-email-fallback-link{color:var(--accent);text-decoration:underline;text-underline-offset:2px;font-weight:600}
   .dt-email-fallback-link:hover{color:var(--accent-dark)}
 

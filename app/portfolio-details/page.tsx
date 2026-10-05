@@ -1,4 +1,15 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+
+// Template placeholder page (placeholder copy, no real case study behind it).
+// It keeps a self-referencing canonical so it no longer claims the homepage as
+// its canonical URL, but it is deliberately left out of the sitemap.
+export const metadata: Metadata = {
+  title: "Portfolio Details",
+  description: "Project showcase and case study breakdown from DigiBiz Technologies.",
+  alternates: { canonical: "/portfolio-details" },
+  robots: { index: false, follow: true },
+};
 
 export default function PortfolioDetails() {
   return (
@@ -26,7 +37,7 @@ export default function PortfolioDetails() {
           <div className="hero-content" data-aos="fade-up">
             <div className="project-category">E-Commerce Platform</div>
             <h1 className="project-title">Sustainable Fashion Marketplace</h1>
-            <p className="project-subtitle">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae.</p>
+            <p className="project-subtitle">A multi-vendor e-commerce platform for a sustainable fashion collective, rebuilt around faster product discovery, local payments, and a checkout that works on low-end mobile devices.</p>
           </div>
 
           <div className="project-meta-grid" data-aos="fade-up" data-aos-delay="200">
@@ -222,7 +233,7 @@ export default function PortfolioDetails() {
                   </div>
                   <div className="feature-content">
                     <h4>Advanced Search Filters</h4>
-                    <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+                    <p>Filter by size, fabric, price, and sustainability rating so shoppers reach a relevant product in three taps instead of scrolling.</p>
                   </div>
                 </div>
                 <div className="feature-row" data-aos="fade-up" data-aos-delay="200">
@@ -231,7 +242,7 @@ export default function PortfolioDetails() {
                   </div>
                   <div className="feature-content">
                     <h4>Sustainability Scoring</h4>
-                    <p>Excepteur sint occaecat cupidatat non proident sunt in culpa qui officia deserunt mollit anim.</p>
+                    <p>Each product carries a transparency score covering material sourcing, labour conditions, and packaging so buyers can compare impact.</p>
                   </div>
                 </div>
                 <div className="feature-row" data-aos="fade-up" data-aos-delay="250">
@@ -240,7 +251,7 @@ export default function PortfolioDetails() {
                   </div>
                   <div className="feature-content">
                     <h4>Community Reviews</h4>
-                    <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p>
+                    <p>Verified buyer reviews and fit feedback reduce returns and build confidence for first-time customers.</p>
                   </div>
                 </div>
               </div>

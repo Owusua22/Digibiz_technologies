@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import PricingSection from "@/components/PricingSection";
+import { SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Pricing | Digibiz Technologies — Transparent Web & Digital Solutions",
@@ -30,11 +31,11 @@ const pricingSchema = {
   name: "Digibiz Technologies Pricing",
   description:
     "Pricing packages for website development, digital marketing, business automation, and custom digital business solutions.",
-  url: "https://digibiztechnologies.com/pricing",
+  url: `${SITE_URL}/pricing`,
   provider: {
     "@type": "Organization",
     name: "Digibiz Technologies",
-    url: "https://digibiztechnologies.com",
+    url: SITE_URL,
     telephone: "+233 553 191 734",
     email: "digibiztechnologies1@gmail.com",
   },

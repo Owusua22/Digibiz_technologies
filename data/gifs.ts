@@ -15,24 +15,24 @@ export const SERVICE_GIF_MAP: Record<string, { gif: string; alt: string }> = {
     gif: GIFS.globe,
     alt: "Global website development illustration",
   },
-  "digital-marketing-seo": {
+  "mobile-app-development": {
+    gif: GIFS.layers,
+    alt: "Mobile app technology layers illustration",
+  },
+  "digital-marketing": {
     gif: GIFS.chart,
     alt: "Digital marketing growth chart illustration",
   },
-  "business-automation": {
-    gif: GIFS.puzzle,
-    alt: "Business automation puzzle pieces illustration",
-  },
-  "ai-solutions": {
-    gif: GIFS.layers,
-    alt: "AI technology layers and neural network illustration",
-  },
-  "branding-graphic-design": {
+  "graphic-design": {
     gif: GIFS.coins,
     alt: "Brand value and return on investment illustration",
   },
-  "business-digital-strategy": {
+  "seo-services": {
     gif: GIFS.rocket,
-    alt: "Business growth strategy rocket illustration",
+    alt: "Search visibility growth illustration",
+  },
+  "business-it-solutions": {
+    gif: GIFS.puzzle,
+    alt: "Connected business systems puzzle illustration",
   },
 };

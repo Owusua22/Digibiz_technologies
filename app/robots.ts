@@ -1,17 +1,17 @@
-import { MetadataRoute } from "next";
+import type { MetadataRoute } from "next";
+import { SITE_URL } from "@/lib/site";
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = "https://digibiztechnologies.com";
-
   return {
     rules: [
       {
         userAgent: "*",
         allow: "/",
-       
+        // Private areas: the CMS login/dashboard and the internal API surface.
+        disallow: ["/admin", "/admin/", "/api/"],
       },
     ],
-    sitemap: `${baseUrl}/sitemap.xml`,
-    host: baseUrl,
+    sitemap: `${SITE_URL}/sitemap.xml`,
+    host: SITE_URL,
   };
 }

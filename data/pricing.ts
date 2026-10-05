@@ -173,7 +173,7 @@ export const SERVICE_ADDONS: ServiceAddon[] = [
   },
   {
     id: "digital-marketing-seo",
-    title: "SEO & Digital Marketing",
+    title: "Digital Marketing & SEO Retainer",
     category: "Growth & Traffic",
     startingPrice: "GH₵1,200",
     period: "/mo",

@@ -20,3 +20,21 @@ model Post {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+/// A public enquiry captured by the contact form. Writing the lead to the
+/// database is what lets the server confirm a submission actually succeeded,
+/// which is the only point at which a `generate_lead` conversion is recorded.
+model Lead {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  company   String?
+  service   String
+  message   String   @db.Text
+  source    String   @default("contact_page")
+  status    String   @default("new")
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}

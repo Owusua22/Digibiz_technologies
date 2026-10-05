@@ -15,7 +15,7 @@ const faqs = [
   },
   {
     q: "Can I start with just one service?",
-    a: "Absolutely. Most clients start with a website or a marketing package and add automation or AI later as their business grows. Nothing is bundled unless it actually helps you.",
+    a: "Absolutely. Most clients start with a website or a marketing package and add business & IT solutions later as their business grows. Nothing is bundled unless it actually helps you.",
   },
   {
     q: "What happens after my project launches?",

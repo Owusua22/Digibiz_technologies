@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
-import Script from "next/script";
 import "./globals.css";
 
 // Import your vendor stylesheets directly
@@ -17,6 +16,9 @@ import ScrollTop from "@/components/ScrollTop";
 import Preloader from "@/components/Preloader";
 import BodyClass from "@/components/BodyClass";
 import VendorScripts from "@/components/VendorScripts";
+import GoogleAnalytics from "@/components/GoogleAnalytics";
+import FloatingWhatsApp from "@/components/FloatingWhatsApp";
+import { SITE_URL } from "@/lib/site";
 
 // Set up Google Font using Next.js font optimization
 const plusJakartaSans = Plus_Jakarta_Sans({
@@ -25,9 +27,7 @@ const plusJakartaSans = Plus_Jakarta_Sans({
   display: "swap",
 });
 
-const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ??
-  "https://www.digibiztechnologies.com";
+const siteUrl = SITE_URL;
 
 const logoPath = "/Digibiz_logo.jpeg";
 const logoUrl = `${siteUrl}${logoPath}`;
@@ -37,21 +37,23 @@ export const metadata: Metadata = {
 
   title: {
     default:
-      "DigiBiz Technologies | Web Design, Digital Marketing & SEO in Ghana",
+      "Digibiz Technologies | Web & Mobile Development, Digital Marketing, Design, SEO & IT in Ghana",
     template: "%s | DigiBiz Technologies",
   },
 
   description:
-    "DigiBiz Technologies helps businesses in Ghana grow online with professional web design, web development, SEO, digital marketing, branding, and business automation solutions.",
+    "Digibiz Technologies helps businesses in Ghana grow online with web development, mobile app development, digital marketing, graphic design, SEO, and business &amp; IT solutions.",
 
-  keywords: [
+keywords: [
     "web design Ghana",
     "web development agency in Ghana",
-    "digital marketing agency in Ghana",
+    "mobile app development Ghana",
+    "digital marketing agency Ghana",
     "SEO services Ghana",
     "website design Ghana",
     "business automation Ghana",
-    "branding services Ghana",
+    "graphic design Ghana",
+    "IT solutions Ghana",
     "digital solutions Ghana",
   ],
 
@@ -65,9 +67,10 @@ export const metadata: Metadata = {
   creator: "DigiBiz Technologies",
   publisher: "DigiBiz Technologies",
 
-  alternates: {
-    canonical: "/",
-  },
+  // No `alternates.canonical` here on purpose. A root-level canonical of "/"
+  // is inherited by every page that does not declare its own, which made
+  // /privacy, /terms and /portfolio-details all claim the homepage as their
+  // canonical URL. Each route now declares its own.
 
   icons: {
     icon: [
@@ -95,9 +98,9 @@ export const metadata: Metadata = {
     url: siteUrl,
     siteName: "DigiBiz Technologies",
     title:
-      "DigiBiz Technologies | Web Design, Digital Marketing & SEO in Ghana",
+      "Digibiz Technologies | Web & Mobile Development, Digital Marketing, Design, SEO & IT in Ghana",
     description:
-      "Professional web design, web development, SEO, digital marketing, branding, and business automation solutions for businesses in Ghana.",
+      "Web and mobile development, digital marketing, graphic design, SEO, and business &amp; IT solutions for businesses in Ghana.",
     images: [
       {
         url: logoUrl,
@@ -111,9 +114,9 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title:
-      "DigiBiz Technologies | Web Design, Digital Marketing & SEO in Ghana",
+      "Digibiz Technologies | Web & Mobile Development, Digital Marketing, Design, SEO & IT in Ghana",
     description:
-      "Helping businesses in Ghana grow with web development, SEO, digital marketing, branding, and automation.",
+      "Helping businesses in Ghana grow with web and mobile development, digital marketing, graphic design, SEO, and business &amp; IT solutions.",
     images: [logoUrl],
   },
 
@@ -137,20 +140,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-TQ80RJ4XS3"
-          strategy="afterInteractive"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-TQ80RJ4XS3');
-          `}
-        </Script>
-      </head>
+      <head />
       <body className={plusJakartaSans.className} suppressHydrationWarning>
         {/* Organization Structured Data (JSON-LD) */}
         <script
@@ -166,7 +156,7 @@ export default function RootLayout({
                 url: logoUrl,
               },
               description:
-                "DigiBiz Technologies partners with growing businesses to deliver website development, digital marketing and SEO, business automation, AI solutions, branding and graphic design, and business and digital strategy.",
+                "DigiBiz Technologies partners with growing businesses to deliver web development, mobile app development, digital marketing, graphic design, SEO, and business & IT solutions.",
               contactPoint: {
                 "@type": "ContactPoint",
                 telephone: "+233-553-191-734",
@@ -178,7 +168,7 @@ export default function RootLayout({
                   "@type": "Offer",
                   itemOffered: {
                     "@type": "Service",
-                    name: "Website & Web Development",
+                    name: "Web Development",
                     description:
                       "Professional business websites, e-commerce stores, landing pages, and custom web applications built to perform.",
                   },
@@ -187,45 +177,45 @@ export default function RootLayout({
                   "@type": "Offer",
                   itemOffered: {
                     "@type": "Service",
-                    name: "Digital Marketing & SEO",
+                    name: "Mobile App Development",
                     description:
-                      "SEO, social media marketing, Google Ads, lead generation, and content strategy for measurable business growth.",
+                      "Android, iOS, and cross-platform mobile apps with in-app payments, App Store submission, and ongoing support.",
                   },
                 },
                 {
                   "@type": "Offer",
                   itemOffered: {
                     "@type": "Service",
-                    name: "Business Automation",
+                    name: "Digital Marketing",
                     description:
-                      "Connected workflows, email and WhatsApp automation, CRM integrations, and AI-powered business processes.",
+                      "Google Ads, social media campaigns, email marketing, and content that generate measurable leads.",
                   },
                 },
                 {
                   "@type": "Offer",
                   itemOffered: {
                     "@type": "Service",
-                    name: "AI Solutions",
+                    name: "Graphic Design",
                     description:
-                      "AI chatbots, customer support tools, content assistants, and custom AI integrations for businesses.",
+                      "Logo design, brand identity, social media graphics, marketing collateral, packaging, and presentations.",
                   },
                 },
                 {
                   "@type": "Offer",
                   itemOffered: {
                     "@type": "Service",
-                    name: "Branding & Graphic Design",
+                    name: "SEO",
                     description:
-                      "Logo design, brand identity, social media graphics, marketing materials, and business presentations.",
+                      "Technical SEO, local SEO, Google Business Profile optimisation, and content built around real customer searches.",
                   },
                 },
                 {
                   "@type": "Offer",
                   itemOffered: {
                     "@type": "Service",
-                    name: "Business & Digital Strategy",
+                    name: "Business & IT Solutions",
                     description:
-                      "Digital transformation, competitor research, market analysis, technology consulting, and growth strategy.",
+                      "Business process automation, practical AI, managed IT support, cloud hosting, backups, cybersecurity, and systems integration.",
                   },
                 },
               ],
@@ -235,11 +225,15 @@ export default function RootLayout({
 
         <BodyClass />
 
+        <GoogleAnalytics />
+
         <Header />
 
         <main className="main">{children}</main>
 
         <Footer />
+
+        <FloatingWhatsApp />
 
         <ScrollTop />
 
