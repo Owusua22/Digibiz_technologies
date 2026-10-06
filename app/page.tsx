@@ -547,37 +547,29 @@ export default function Home() {
             <div className="dt-hero-text" data-aos="fade-up" data-aos-delay="100">
            
               <h1 className="dt-hero-heading">
-              We Help Businesses <span className="dt-hero-highlight">Increase their brand visibility Online</span>
+                Get More Customers. Work Smarter. Grow Faster.
               </h1>
               <p className="dt-hero-paragraph">
-            Your business deserves more than just a good-looking website. At DigiBiz Technologies, we combine web and mobile development, digital marketing, design, SEO, and business & IT solutions to help you reach the right customers, save time, and turn more opportunities into sales.
+                Your website and digital systems should do more than make your business look good. DigiBiz Technologies builds practical digital solutions that help you attract customers, generate opportunities, and run your business more efficiently. Built for growing businesses in Ghana and beyond.
               </p>
               <div className="dt-hero-cta-group">
-                <Link href="/contact" className="dt-btn dt-btn-primary">
-                Contact Us
-                  <i className="bi bi-arrow-right"></i>
-                </Link>
-                <Link href="/services" className="dt-btn dt-btn-outline">
-                  <span>Explore Our Services</span>
+                <a
+                  href="https://wa.me/233553191734?text=Hi%20DigiBiz%2C%20I'd%20like%20to%20discuss%20how%20you%20can%20help%20my%20business%20grow."
+                  className="dt-btn dt-btn-primary"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Talk to us on WhatsApp"
+                  data-ga-label="hero-primary"
+                >
+                  Talk to Us on WhatsApp →
+                  <i className="bi bi-whatsapp"></i>
+                </a>
+                <Link href="/services" className="dt-btn dt-btn-outline" aria-label="See what we can do">
+                  <span>See What We Can Do</span>
                   <i className="bi bi-arrow-right"></i>
                 </Link>
               </div>
-              <div className="dt-hero-stats">
-                <div className="dt-hero-stat">
-                  <strong>50+</strong>
-                  <span>Projects Delivered</span>
-                </div>
-                <div className="dt-hero-stat-divider" />
-                <div className="dt-hero-stat">
-                  <strong>98%</strong>
-                  <span>Client Satisfaction</span>
-                </div>
-                <div className="dt-hero-stat-divider" />
-                <div className="dt-hero-stat">
-                  <strong>24/7</strong>
-                  <span>Support</span>
-                </div>
-              </div>
+
             </div>
 
             <div className="dt-hero-image-col" data-aos="fade-up" data-aos-delay="200">
@@ -617,36 +609,27 @@ export default function Home() {
       <section id="trust" className="section light-background" style={sectionPadTight}>
         <div className="container" data-aos="fade-up" data-aos-delay="100">
           <div className="text-center mb-4">
-            <h2 className="section-headline mb-4">Helping Businesses Go Digital With Confidence</h2>
+            <h2 className="section-headline mb-4">Practical Digital Solutions That Drive Business Growth</h2>
             <p className="section-description">
-              Whatever stage your business is at, Digibiz Technologies gives you the digital foundation to compete and grow.
+              DigiBiz Technologies builds practical digital solutions that help you attract customers, generate opportunities, and run your business more efficiently.
             </p>
           </div>
 
           <div style={trustGridStyle}>
             <div style={trustCardStyle} data-aos="fade-up" data-aos-delay="150">
-            
               <img src={GIFS.rocket} alt="" width={48} height={48} style={{ margin: "0 auto 8px", display: "block", objectFit: "contain" }} aria-hidden="true" loading="lazy" />
-              <h3 style={trustCardTitleStyle}>Online Visibility</h3>
-              <p style={trustCardTextStyle}>Reach more customers and build a stronger online presence.</p>
+              <h3 style={trustCardTitleStyle}>Custom Speed</h3>
+              <p style={trustCardTextStyle}>Solutions built around your business—not generic templates or one-size-fits-all systems.</p>
             </div>
             <div style={trustCardStyle} data-aos="fade-up" data-aos-delay="200">
-             
               <img src={GIFS.puzzle} alt="" width={48} height={48} style={{ margin: "0 auto 8px", display: "block", objectFit: "contain" }} aria-hidden="true" loading="lazy" />
-              <h3 style={trustCardTitleStyle}>Work Smarter</h3>
-              <p style={trustCardTextStyle}>Automate repetitive tasks and improve your workflow.</p>
+              <h3 style={trustCardTitleStyle}>Mobile-First</h3>
+              <p style={trustCardTextStyle}>Digital experiences designed to work smoothly across phones, tablets, and desktops.</p>
             </div>
             <div style={trustCardStyle} data-aos="fade-up" data-aos-delay="250">
-             
               <img src={GIFS.globe} alt="" width={48} height={48} style={{ margin: "0 auto 8px", display: "block", objectFit: "contain" }} aria-hidden="true" loading="lazy" />
-              <h3 style={trustCardTitleStyle}>Build Better</h3>
-              <p style={trustCardTextStyle}>Get professional websites and reliable digital tools.</p>
-            </div>
-            <div style={trustCardStyle} data-aos="fade-up" data-aos-delay="300">
-            
-              <img src={GIFS.chart} alt="" width={48} height={48} style={{ margin: "0 auto 8px", display: "block", objectFit: "contain" }} aria-hidden="true" loading="lazy" />
-              <h3 style={trustCardTitleStyle}>Get Results</h3>
-              <p style={trustCardTextStyle}>Use digital strategies built to support real business growth.</p>
+              <h3 style={trustCardTitleStyle}>Local Support</h3>
+              <p style={trustCardTextStyle}>Responsive support from a Ghana-based team that understands the local business environment.</p>
             </div>
           </div>
         </div>
@@ -817,15 +800,25 @@ We don&apos;t believe in one-size-fits-all solutions. We take the time to unders
             }}
           >
             <h2 style={{ color: "#fff", fontSize: "2.1rem", marginBottom: "14px" }}>
-              Ready to Increase Your  Online Visibility  Presence?
+              Ready to Get More Customers. Work Smarter. Grow Faster?
             </h2>
             <p style={{ color: "rgba(255,255,255,0.75)", maxWidth: "620px", margin: "0 auto 30px" }}>
               Let&apos;s turn your ideas and business challenges into practical digital solutions.
             </p>
             <div style={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" }}>
-             
-              <Link href="/contact" className="dt-btn dt-btn-outline">
-            Contact Us
+              <a
+                href="https://wa.me/233553191734?text=Hi%20DigiBiz%2C%20I'd%20like%20to%20discuss%20how%20you%20can%20help%20my%20business%20grow."
+                className="dt-btn dt-btn-primary"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Talk to us on WhatsApp"
+                data-ga-label="final-cta"
+              >
+                Talk to Us on WhatsApp →
+                <i className="bi bi-whatsapp"></i>
+              </a>
+              <Link href="/services" className="dt-btn dt-btn-outline" aria-label="See what we can do">
+                See What We Can Do
               </Link>
             </div>
           </div>
